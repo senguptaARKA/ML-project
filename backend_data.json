@@ -1,0 +1,1541 @@
+{
+  "dataset": {
+    "total_applicants": 1000,
+    "features_count": 9,
+    "missing_values": {
+      "Age": 0,
+      "Sex": 0,
+      "Job": 0,
+      "Housing": 0,
+      "Saving accounts": 183,
+      "Checking account": 394,
+      "Credit amount": 0,
+      "Duration": 0,
+      "Purpose": 0
+    },
+    "duplicate_rows": 0,
+    "risk_distribution": {
+      "good": 700,
+      "bad": 300
+    },
+    "training_samples": 800,
+    "testing_samples": 200,
+    "age_distribution": [
+      {
+        "bin": "19-24",
+        "count": 149
+      },
+      {
+        "bin": "24-30",
+        "count": 262
+      },
+      {
+        "bin": "30-35",
+        "count": 177
+      },
+      {
+        "bin": "35-41",
+        "count": 155
+      },
+      {
+        "bin": "41-47",
+        "count": 89
+      },
+      {
+        "bin": "47-52",
+        "count": 72
+      },
+      {
+        "bin": "52-58",
+        "count": 42
+      },
+      {
+        "bin": "58-63",
+        "count": 26
+      },
+      {
+        "bin": "63-69",
+        "count": 21
+      },
+      {
+        "bin": "69-75",
+        "count": 7
+      }
+    ],
+    "credit_distribution": [
+      {
+        "bin": "\u20b9250-\u20b92,067",
+        "count": 445
+      },
+      {
+        "bin": "\u20b92,067-\u20b93,884",
+        "count": 293
+      },
+      {
+        "bin": "\u20b93,884-\u20b95,702",
+        "count": 97
+      },
+      {
+        "bin": "\u20b95,702-\u20b97,519",
+        "count": 80
+      },
+      {
+        "bin": "\u20b97,519-\u20b99,337",
+        "count": 38
+      },
+      {
+        "bin": "\u20b99,337-\u20b911,154",
+        "count": 19
+      },
+      {
+        "bin": "\u20b911,154-\u20b912,971",
+        "count": 14
+      },
+      {
+        "bin": "\u20b912,971-\u20b914,789",
+        "count": 8
+      },
+      {
+        "bin": "\u20b914,789-\u20b916,606",
+        "count": 5
+      },
+      {
+        "bin": "\u20b916,606-\u20b918,424",
+        "count": 1
+      }
+    ],
+    "duration_distribution": [
+      {
+        "bin": "4-12m",
+        "count": 359
+      },
+      {
+        "bin": "12-21m",
+        "count": 195
+      },
+      {
+        "bin": "21-29m",
+        "count": 233
+      },
+      {
+        "bin": "29-38m",
+        "count": 126
+      },
+      {
+        "bin": "38-46m",
+        "count": 22
+      },
+      {
+        "bin": "46-55m",
+        "count": 51
+      },
+      {
+        "bin": "55-63m",
+        "count": 13
+      },
+      {
+        "bin": "63-72m",
+        "count": 1
+      }
+    ],
+    "risk_by_sex": [
+      {
+        "sex": "female",
+        "good": 201,
+        "bad": 109,
+        "total": 310,
+        "bad_rate": 35.2
+      },
+      {
+        "sex": "male",
+        "good": 499,
+        "bad": 191,
+        "total": 690,
+        "bad_rate": 27.7
+      }
+    ],
+    "risk_by_housing": [
+      {
+        "housing": "free",
+        "good": 64,
+        "bad": 44,
+        "bad_rate": 40.7
+      },
+      {
+        "housing": "own",
+        "good": 527,
+        "bad": 186,
+        "bad_rate": 26.1
+      },
+      {
+        "housing": "rent",
+        "good": 109,
+        "bad": 70,
+        "bad_rate": 39.1
+      }
+    ],
+    "risk_by_purpose": [
+      {
+        "purpose": "business",
+        "good": 63,
+        "bad": 34,
+        "bad_rate": 35.1
+      },
+      {
+        "purpose": "car",
+        "good": 231,
+        "bad": 106,
+        "bad_rate": 31.5
+      },
+      {
+        "purpose": "domestic appliances",
+        "good": 8,
+        "bad": 4,
+        "bad_rate": 33.3
+      },
+      {
+        "purpose": "education",
+        "good": 36,
+        "bad": 23,
+        "bad_rate": 39.0
+      },
+      {
+        "purpose": "furniture/equipment",
+        "good": 123,
+        "bad": 58,
+        "bad_rate": 32.0
+      },
+      {
+        "purpose": "radio/TV",
+        "good": 218,
+        "bad": 62,
+        "bad_rate": 22.1
+      },
+      {
+        "purpose": "repairs",
+        "good": 14,
+        "bad": 8,
+        "bad_rate": 36.4
+      },
+      {
+        "purpose": "vacation/others",
+        "good": 7,
+        "bad": 5,
+        "bad_rate": 41.7
+      }
+    ],
+    "credit_by_risk": {
+      "good": {
+        "mean": 2985.5,
+        "median": 2244.0,
+        "min": 250.0,
+        "max": 15857.0,
+        "q25": 1375.5,
+        "q75": 3634.75
+      },
+      "bad": {
+        "mean": 3938.1,
+        "median": 2574.5,
+        "min": 433.0,
+        "max": 18424.0,
+        "q25": 1352.5,
+        "q75": 5141.5
+      }
+    },
+    "duration_by_risk": {
+      "good": {
+        "mean": 19.2,
+        "median": 18.0,
+        "min": 4.0,
+        "max": 60.0,
+        "q25": 12.0,
+        "q75": 24.0
+      },
+      "bad": {
+        "mean": 24.9,
+        "median": 24.0,
+        "min": 6.0,
+        "max": 72.0,
+        "q25": 12.0,
+        "q75": 36.0
+      }
+    }
+  },
+  "models": {
+    "best_model": "Tuned Random Forest",
+    "comparison_table": [
+      {
+        "model": "Logistic Regression",
+        "accuracy": 0.615,
+        "precision": 0.3976,
+        "recall": 0.55,
+        "f1": 0.4615,
+        "roc_auc": 0.6368,
+        "pr_auc": 0.502,
+        "train_time_sec": 0.02,
+        "shap_time_50_samples": 0.0
+      },
+      {
+        "model": "Random Forest",
+        "accuracy": 0.665,
+        "precision": 0.4386,
+        "recall": 0.4167,
+        "f1": 0.4274,
+        "roc_auc": 0.6184,
+        "pr_auc": 0.4554,
+        "train_time_sec": 0.449,
+        "shap_time_50_samples": 1.458
+      },
+      {
+        "model": "XGBoost",
+        "accuracy": 0.7,
+        "precision": 0.5,
+        "recall": 0.3333,
+        "f1": 0.4,
+        "roc_auc": 0.665,
+        "pr_auc": 0.4845,
+        "train_time_sec": 0.317,
+        "shap_time_50_samples": 0.069
+      },
+      {
+        "model": "LightGBM",
+        "accuracy": 0.67,
+        "precision": 0.45,
+        "recall": 0.45,
+        "f1": 0.45,
+        "roc_auc": 0.652,
+        "pr_auc": 0.4542,
+        "train_time_sec": 0.228,
+        "shap_time_50_samples": 0.281
+      },
+      {
+        "model": "Tuned Random Forest",
+        "accuracy": 0.675,
+        "precision": 0.4638,
+        "recall": 0.5333,
+        "f1": 0.4961,
+        "roc_auc": 0.669,
+        "pr_auc": 0.5069,
+        "train_time_sec": 0.463,
+        "shap_time_50_samples": 0.359
+      }
+    ],
+    "roc_curves": {
+      "Logistic Regression": [
+        {
+          "fpr": 0.0,
+          "tpr": 0.0
+        },
+        {
+          "fpr": 0.007,
+          "tpr": 0.033
+        },
+        {
+          "fpr": 0.014,
+          "tpr": 0.167
+        },
+        {
+          "fpr": 0.043,
+          "tpr": 0.183
+        },
+        {
+          "fpr": 0.064,
+          "tpr": 0.283
+        },
+        {
+          "fpr": 0.129,
+          "tpr": 0.3
+        },
+        {
+          "fpr": 0.143,
+          "tpr": 0.35
+        },
+        {
+          "fpr": 0.179,
+          "tpr": 0.383
+        },
+        {
+          "fpr": 0.257,
+          "tpr": 0.45
+        },
+        {
+          "fpr": 0.279,
+          "tpr": 0.5
+        },
+        {
+          "fpr": 0.336,
+          "tpr": 0.533
+        },
+        {
+          "fpr": 0.407,
+          "tpr": 0.567
+        },
+        {
+          "fpr": 0.457,
+          "tpr": 0.583
+        },
+        {
+          "fpr": 0.464,
+          "tpr": 0.617
+        },
+        {
+          "fpr": 0.493,
+          "tpr": 0.667
+        },
+        {
+          "fpr": 0.514,
+          "tpr": 0.7
+        },
+        {
+          "fpr": 0.6,
+          "tpr": 0.733
+        },
+        {
+          "fpr": 0.664,
+          "tpr": 0.75
+        },
+        {
+          "fpr": 0.693,
+          "tpr": 0.783
+        },
+        {
+          "fpr": 0.714,
+          "tpr": 0.8
+        },
+        {
+          "fpr": 0.729,
+          "tpr": 0.867
+        },
+        {
+          "fpr": 0.786,
+          "tpr": 0.883
+        },
+        {
+          "fpr": 0.893,
+          "tpr": 0.95
+        },
+        {
+          "fpr": 0.971,
+          "tpr": 0.967
+        },
+        {
+          "fpr": 1.0,
+          "tpr": 1.0
+        }
+      ],
+      "Random Forest": [
+        {
+          "fpr": 0.0,
+          "tpr": 0.0
+        },
+        {
+          "fpr": 0.007,
+          "tpr": 0.067
+        },
+        {
+          "fpr": 0.036,
+          "tpr": 0.083
+        },
+        {
+          "fpr": 0.057,
+          "tpr": 0.15
+        },
+        {
+          "fpr": 0.086,
+          "tpr": 0.217
+        },
+        {
+          "fpr": 0.114,
+          "tpr": 0.283
+        },
+        {
+          "fpr": 0.136,
+          "tpr": 0.35
+        },
+        {
+          "fpr": 0.186,
+          "tpr": 0.367
+        },
+        {
+          "fpr": 0.214,
+          "tpr": 0.417
+        },
+        {
+          "fpr": 0.264,
+          "tpr": 0.467
+        },
+        {
+          "fpr": 0.286,
+          "tpr": 0.533
+        },
+        {
+          "fpr": 0.343,
+          "tpr": 0.533
+        },
+        {
+          "fpr": 0.4,
+          "tpr": 0.55
+        },
+        {
+          "fpr": 0.471,
+          "tpr": 0.567
+        },
+        {
+          "fpr": 0.514,
+          "tpr": 0.617
+        },
+        {
+          "fpr": 0.571,
+          "tpr": 0.65
+        },
+        {
+          "fpr": 0.621,
+          "tpr": 0.683
+        },
+        {
+          "fpr": 0.65,
+          "tpr": 0.75
+        },
+        {
+          "fpr": 0.721,
+          "tpr": 0.8
+        },
+        {
+          "fpr": 0.771,
+          "tpr": 0.883
+        },
+        {
+          "fpr": 0.836,
+          "tpr": 0.883
+        },
+        {
+          "fpr": 0.864,
+          "tpr": 0.95
+        },
+        {
+          "fpr": 0.893,
+          "tpr": 0.983
+        },
+        {
+          "fpr": 0.943,
+          "tpr": 0.983
+        },
+        {
+          "fpr": 1.0,
+          "tpr": 1.0
+        }
+      ],
+      "XGBoost": [
+        {
+          "fpr": 0.0,
+          "tpr": 0.0
+        },
+        {
+          "fpr": 0.007,
+          "tpr": 0.05
+        },
+        {
+          "fpr": 0.014,
+          "tpr": 0.1
+        },
+        {
+          "fpr": 0.064,
+          "tpr": 0.167
+        },
+        {
+          "fpr": 0.121,
+          "tpr": 0.2
+        },
+        {
+          "fpr": 0.143,
+          "tpr": 0.283
+        },
+        {
+          "fpr": 0.15,
+          "tpr": 0.383
+        },
+        {
+          "fpr": 0.214,
+          "tpr": 0.483
+        },
+        {
+          "fpr": 0.236,
+          "tpr": 0.5
+        },
+        {
+          "fpr": 0.257,
+          "tpr": 0.533
+        },
+        {
+          "fpr": 0.307,
+          "tpr": 0.567
+        },
+        {
+          "fpr": 0.357,
+          "tpr": 0.617
+        },
+        {
+          "fpr": 0.386,
+          "tpr": 0.633
+        },
+        {
+          "fpr": 0.407,
+          "tpr": 0.667
+        },
+        {
+          "fpr": 0.521,
+          "tpr": 0.7
+        },
+        {
+          "fpr": 0.55,
+          "tpr": 0.717
+        },
+        {
+          "fpr": 0.586,
+          "tpr": 0.75
+        },
+        {
+          "fpr": 0.6,
+          "tpr": 0.783
+        },
+        {
+          "fpr": 0.671,
+          "tpr": 0.833
+        },
+        {
+          "fpr": 0.714,
+          "tpr": 0.85
+        },
+        {
+          "fpr": 0.793,
+          "tpr": 0.883
+        },
+        {
+          "fpr": 0.814,
+          "tpr": 0.917
+        },
+        {
+          "fpr": 0.836,
+          "tpr": 0.95
+        },
+        {
+          "fpr": 0.85,
+          "tpr": 0.967
+        },
+        {
+          "fpr": 1.0,
+          "tpr": 1.0
+        }
+      ],
+      "LightGBM": [
+        {
+          "fpr": 0.0,
+          "tpr": 0.0
+        },
+        {
+          "fpr": 0.014,
+          "tpr": 0.05
+        },
+        {
+          "fpr": 0.029,
+          "tpr": 0.133
+        },
+        {
+          "fpr": 0.064,
+          "tpr": 0.167
+        },
+        {
+          "fpr": 0.071,
+          "tpr": 0.2
+        },
+        {
+          "fpr": 0.136,
+          "tpr": 0.283
+        },
+        {
+          "fpr": 0.157,
+          "tpr": 0.3
+        },
+        {
+          "fpr": 0.164,
+          "tpr": 0.333
+        },
+        {
+          "fpr": 0.2,
+          "tpr": 0.35
+        },
+        {
+          "fpr": 0.214,
+          "tpr": 0.45
+        },
+        {
+          "fpr": 0.243,
+          "tpr": 0.517
+        },
+        {
+          "fpr": 0.307,
+          "tpr": 0.533
+        },
+        {
+          "fpr": 0.314,
+          "tpr": 0.6
+        },
+        {
+          "fpr": 0.4,
+          "tpr": 0.617
+        },
+        {
+          "fpr": 0.414,
+          "tpr": 0.65
+        },
+        {
+          "fpr": 0.436,
+          "tpr": 0.7
+        },
+        {
+          "fpr": 0.5,
+          "tpr": 0.717
+        },
+        {
+          "fpr": 0.6,
+          "tpr": 0.767
+        },
+        {
+          "fpr": 0.629,
+          "tpr": 0.783
+        },
+        {
+          "fpr": 0.671,
+          "tpr": 0.817
+        },
+        {
+          "fpr": 0.771,
+          "tpr": 0.867
+        },
+        {
+          "fpr": 0.814,
+          "tpr": 0.883
+        },
+        {
+          "fpr": 0.836,
+          "tpr": 0.95
+        },
+        {
+          "fpr": 0.857,
+          "tpr": 0.967
+        },
+        {
+          "fpr": 1.0,
+          "tpr": 1.0
+        }
+      ],
+      "Tuned Random Forest": [
+        {
+          "fpr": 0.0,
+          "tpr": 0.0
+        },
+        {
+          "fpr": 0.007,
+          "tpr": 0.033
+        },
+        {
+          "fpr": 0.014,
+          "tpr": 0.083
+        },
+        {
+          "fpr": 0.029,
+          "tpr": 0.217
+        },
+        {
+          "fpr": 0.057,
+          "tpr": 0.233
+        },
+        {
+          "fpr": 0.1,
+          "tpr": 0.267
+        },
+        {
+          "fpr": 0.107,
+          "tpr": 0.3
+        },
+        {
+          "fpr": 0.121,
+          "tpr": 0.35
+        },
+        {
+          "fpr": 0.157,
+          "tpr": 0.367
+        },
+        {
+          "fpr": 0.229,
+          "tpr": 0.433
+        },
+        {
+          "fpr": 0.236,
+          "tpr": 0.483
+        },
+        {
+          "fpr": 0.264,
+          "tpr": 0.55
+        },
+        {
+          "fpr": 0.35,
+          "tpr": 0.567
+        },
+        {
+          "fpr": 0.379,
+          "tpr": 0.6
+        },
+        {
+          "fpr": 0.4,
+          "tpr": 0.65
+        },
+        {
+          "fpr": 0.414,
+          "tpr": 0.667
+        },
+        {
+          "fpr": 0.543,
+          "tpr": 0.7
+        },
+        {
+          "fpr": 0.593,
+          "tpr": 0.783
+        },
+        {
+          "fpr": 0.629,
+          "tpr": 0.817
+        },
+        {
+          "fpr": 0.707,
+          "tpr": 0.833
+        },
+        {
+          "fpr": 0.786,
+          "tpr": 0.867
+        },
+        {
+          "fpr": 0.793,
+          "tpr": 0.9
+        },
+        {
+          "fpr": 0.85,
+          "tpr": 0.95
+        },
+        {
+          "fpr": 0.864,
+          "tpr": 0.967
+        },
+        {
+          "fpr": 1.0,
+          "tpr": 1.0
+        }
+      ]
+    },
+    "pr_curves": {
+      "Logistic Regression": [
+        {
+          "recall": 1.0,
+          "precision": 0.3
+        },
+        {
+          "recall": 0.967,
+          "precision": 0.302
+        },
+        {
+          "recall": 0.95,
+          "precision": 0.31
+        },
+        {
+          "recall": 0.917,
+          "precision": 0.314
+        },
+        {
+          "recall": 0.917,
+          "precision": 0.329
+        },
+        {
+          "recall": 0.867,
+          "precision": 0.327
+        },
+        {
+          "recall": 0.833,
+          "precision": 0.333
+        },
+        {
+          "recall": 0.767,
+          "precision": 0.324
+        },
+        {
+          "recall": 0.733,
+          "precision": 0.328
+        },
+        {
+          "recall": 0.717,
+          "precision": 0.344
+        },
+        {
+          "recall": 0.7,
+          "precision": 0.359
+        },
+        {
+          "recall": 0.667,
+          "precision": 0.367
+        },
+        {
+          "recall": 0.6,
+          "precision": 0.36
+        },
+        {
+          "recall": 0.567,
+          "precision": 0.37
+        },
+        {
+          "recall": 0.55,
+          "precision": 0.393
+        },
+        {
+          "recall": 0.5,
+          "precision": 0.4
+        },
+        {
+          "recall": 0.467,
+          "precision": 0.418
+        },
+        {
+          "recall": 0.433,
+          "precision": 0.441
+        },
+        {
+          "recall": 0.417,
+          "precision": 0.5
+        },
+        {
+          "recall": 0.35,
+          "precision": 0.5
+        },
+        {
+          "recall": 0.283,
+          "precision": 0.5
+        },
+        {
+          "recall": 0.267,
+          "precision": 0.64
+        },
+        {
+          "recall": 0.183,
+          "precision": 0.647
+        },
+        {
+          "recall": 0.117,
+          "precision": 0.778
+        },
+        {
+          "recall": 0.0,
+          "precision": 1.0
+        }
+      ],
+      "Random Forest": [
+        {
+          "recall": 1.0,
+          "precision": 0.3
+        },
+        {
+          "recall": 0.983,
+          "precision": 0.304
+        },
+        {
+          "recall": 0.983,
+          "precision": 0.316
+        },
+        {
+          "recall": 0.95,
+          "precision": 0.317
+        },
+        {
+          "recall": 0.933,
+          "precision": 0.322
+        },
+        {
+          "recall": 0.883,
+          "precision": 0.321
+        },
+        {
+          "recall": 0.85,
+          "precision": 0.325
+        },
+        {
+          "recall": 0.8,
+          "precision": 0.327
+        },
+        {
+          "recall": 0.75,
+          "precision": 0.331
+        },
+        {
+          "recall": 0.683,
+          "precision": 0.32
+        },
+        {
+          "recall": 0.633,
+          "precision": 0.33
+        },
+        {
+          "recall": 0.6,
+          "precision": 0.35
+        },
+        {
+          "recall": 0.55,
+          "precision": 0.367
+        },
+        {
+          "recall": 0.533,
+          "precision": 0.386
+        },
+        {
+          "recall": 0.533,
+          "precision": 0.432
+        },
+        {
+          "recall": 0.467,
+          "precision": 0.431
+        },
+        {
+          "recall": 0.417,
+          "precision": 0.446
+        },
+        {
+          "recall": 0.367,
+          "precision": 0.478
+        },
+        {
+          "recall": 0.333,
+          "precision": 0.526
+        },
+        {
+          "recall": 0.267,
+          "precision": 0.516
+        },
+        {
+          "recall": 0.217,
+          "precision": 0.52
+        },
+        {
+          "recall": 0.183,
+          "precision": 0.579
+        },
+        {
+          "recall": 0.117,
+          "precision": 0.583
+        },
+        {
+          "recall": 0.067,
+          "precision": 0.667
+        },
+        {
+          "recall": 0.0,
+          "precision": 1.0
+        }
+      ],
+      "XGBoost": [
+        {
+          "recall": 1.0,
+          "precision": 0.3
+        },
+        {
+          "recall": 1.0,
+          "precision": 0.312
+        },
+        {
+          "recall": 1.0,
+          "precision": 0.326
+        },
+        {
+          "recall": 0.95,
+          "precision": 0.326
+        },
+        {
+          "recall": 0.9,
+          "precision": 0.323
+        },
+        {
+          "recall": 0.883,
+          "precision": 0.333
+        },
+        {
+          "recall": 0.85,
+          "precision": 0.34
+        },
+        {
+          "recall": 0.817,
+          "precision": 0.345
+        },
+        {
+          "recall": 0.817,
+          "precision": 0.366
+        },
+        {
+          "recall": 0.75,
+          "precision": 0.36
+        },
+        {
+          "recall": 0.717,
+          "precision": 0.368
+        },
+        {
+          "recall": 0.683,
+          "precision": 0.376
+        },
+        {
+          "recall": 0.683,
+          "precision": 0.41
+        },
+        {
+          "recall": 0.633,
+          "precision": 0.413
+        },
+        {
+          "recall": 0.583,
+          "precision": 0.417
+        },
+        {
+          "recall": 0.55,
+          "precision": 0.44
+        },
+        {
+          "recall": 0.533,
+          "precision": 0.478
+        },
+        {
+          "recall": 0.483,
+          "precision": 0.492
+        },
+        {
+          "recall": 0.4,
+          "precision": 0.48
+        },
+        {
+          "recall": 0.35,
+          "precision": 0.5
+        },
+        {
+          "recall": 0.267,
+          "precision": 0.471
+        },
+        {
+          "recall": 0.2,
+          "precision": 0.48
+        },
+        {
+          "recall": 0.15,
+          "precision": 0.529
+        },
+        {
+          "recall": 0.1,
+          "precision": 0.667
+        },
+        {
+          "recall": 0.0,
+          "precision": 1.0
+        }
+      ],
+      "LightGBM": [
+        {
+          "recall": 1.0,
+          "precision": 0.3
+        },
+        {
+          "recall": 1.0,
+          "precision": 0.312
+        },
+        {
+          "recall": 1.0,
+          "precision": 0.326
+        },
+        {
+          "recall": 0.95,
+          "precision": 0.326
+        },
+        {
+          "recall": 0.883,
+          "precision": 0.317
+        },
+        {
+          "recall": 0.85,
+          "precision": 0.321
+        },
+        {
+          "recall": 0.833,
+          "precision": 0.333
+        },
+        {
+          "recall": 0.8,
+          "precision": 0.338
+        },
+        {
+          "recall": 0.783,
+          "precision": 0.351
+        },
+        {
+          "recall": 0.733,
+          "precision": 0.352
+        },
+        {
+          "recall": 0.733,
+          "precision": 0.376
+        },
+        {
+          "recall": 0.7,
+          "precision": 0.385
+        },
+        {
+          "recall": 0.683,
+          "precision": 0.41
+        },
+        {
+          "recall": 0.617,
+          "precision": 0.402
+        },
+        {
+          "recall": 0.6,
+          "precision": 0.429
+        },
+        {
+          "recall": 0.533,
+          "precision": 0.427
+        },
+        {
+          "recall": 0.517,
+          "precision": 0.463
+        },
+        {
+          "recall": 0.45,
+          "precision": 0.458
+        },
+        {
+          "recall": 0.367,
+          "precision": 0.44
+        },
+        {
+          "recall": 0.317,
+          "precision": 0.452
+        },
+        {
+          "recall": 0.267,
+          "precision": 0.471
+        },
+        {
+          "recall": 0.2,
+          "precision": 0.48
+        },
+        {
+          "recall": 0.167,
+          "precision": 0.588
+        },
+        {
+          "recall": 0.117,
+          "precision": 0.778
+        },
+        {
+          "recall": 0.0,
+          "precision": 1.0
+        }
+      ],
+      "Tuned Random Forest": [
+        {
+          "recall": 1.0,
+          "precision": 0.3
+        },
+        {
+          "recall": 1.0,
+          "precision": 0.312
+        },
+        {
+          "recall": 1.0,
+          "precision": 0.326
+        },
+        {
+          "recall": 0.933,
+          "precision": 0.32
+        },
+        {
+          "recall": 0.9,
+          "precision": 0.323
+        },
+        {
+          "recall": 0.867,
+          "precision": 0.327
+        },
+        {
+          "recall": 0.85,
+          "precision": 0.34
+        },
+        {
+          "recall": 0.817,
+          "precision": 0.345
+        },
+        {
+          "recall": 0.8,
+          "precision": 0.358
+        },
+        {
+          "recall": 0.767,
+          "precision": 0.368
+        },
+        {
+          "recall": 0.7,
+          "precision": 0.359
+        },
+        {
+          "recall": 0.7,
+          "precision": 0.385
+        },
+        {
+          "recall": 0.683,
+          "precision": 0.41
+        },
+        {
+          "recall": 0.617,
+          "precision": 0.402
+        },
+        {
+          "recall": 0.583,
+          "precision": 0.417
+        },
+        {
+          "recall": 0.55,
+          "precision": 0.44
+        },
+        {
+          "recall": 0.517,
+          "precision": 0.463
+        },
+        {
+          "recall": 0.45,
+          "precision": 0.458
+        },
+        {
+          "recall": 0.417,
+          "precision": 0.5
+        },
+        {
+          "recall": 0.367,
+          "precision": 0.524
+        },
+        {
+          "recall": 0.3,
+          "precision": 0.529
+        },
+        {
+          "recall": 0.25,
+          "precision": 0.6
+        },
+        {
+          "recall": 0.217,
+          "precision": 0.765
+        },
+        {
+          "recall": 0.1,
+          "precision": 0.667
+        },
+        {
+          "recall": 0.0,
+          "precision": 1.0
+        }
+      ]
+    },
+    "confusion_matrices": {
+      "Logistic Regression": {
+        "tn": 90,
+        "fp": 50,
+        "fn": 27,
+        "tp": 33
+      },
+      "Random Forest": {
+        "tn": 108,
+        "fp": 32,
+        "fn": 35,
+        "tp": 25
+      },
+      "XGBoost": {
+        "tn": 120,
+        "fp": 20,
+        "fn": 40,
+        "tp": 20
+      },
+      "LightGBM": {
+        "tn": 107,
+        "fp": 33,
+        "fn": 33,
+        "tp": 27
+      },
+      "Tuned Random Forest": {
+        "tn": 103,
+        "fp": 37,
+        "fn": 28,
+        "tp": 32
+      }
+    },
+    "interpretability_scatter": [
+      {
+        "model": "Logistic Regression",
+        "roc_auc": 0.6368,
+        "shap_time": 0.0
+      },
+      {
+        "model": "Random Forest",
+        "roc_auc": 0.6184,
+        "shap_time": 1.458
+      },
+      {
+        "model": "XGBoost",
+        "roc_auc": 0.665,
+        "shap_time": 0.069
+      },
+      {
+        "model": "LightGBM",
+        "roc_auc": 0.652,
+        "shap_time": 0.281
+      },
+      {
+        "model": "Tuned Random Forest",
+        "roc_auc": 0.669,
+        "shap_time": 0.359
+      }
+    ]
+  },
+  "fairness": {
+    "sensitive_feature": "Sex",
+    "demographic_parity_difference": 0.0933,
+    "equalized_odds_difference": 0.175,
+    "demographic_parity_status": "Acceptable",
+    "equalized_odds_status": "Needs Review",
+    "group_metrics": [
+      {
+        "group": "male",
+        "applicants": 139,
+        "positive_prediction_rate": 0.3165,
+        "tpr": 0.475,
+        "fpr": 0.2525
+      },
+      {
+        "group": "female",
+        "applicants": 61,
+        "positive_prediction_rate": 0.4098,
+        "tpr": 0.65,
+        "fpr": 0.2927
+      }
+    ]
+  },
+  "global_explainability": {
+    "feature_importance": [
+      {
+        "feature": "Duration",
+        "raw_feature": "num__Duration",
+        "mean_abs_shap": 0.0703
+      },
+      {
+        "feature": "Purpose_radio/TV",
+        "raw_feature": "cat__Purpose_radio/TV",
+        "mean_abs_shap": 0.032
+      },
+      {
+        "feature": "Credit amount",
+        "raw_feature": "num__Credit amount",
+        "mean_abs_shap": 0.0312
+      },
+      {
+        "feature": "Age",
+        "raw_feature": "num__Age",
+        "mean_abs_shap": 0.0294
+      },
+      {
+        "feature": "Housing_own",
+        "raw_feature": "cat__Housing_own",
+        "mean_abs_shap": 0.0252
+      },
+      {
+        "feature": "Checking account_moderate",
+        "raw_feature": "cat__Checking account_moderate",
+        "mean_abs_shap": 0.0189
+      },
+      {
+        "feature": "Checking account_little",
+        "raw_feature": "cat__Checking account_little",
+        "mean_abs_shap": 0.0158
+      },
+      {
+        "feature": "Saving accounts_little",
+        "raw_feature": "cat__Saving accounts_little",
+        "mean_abs_shap": 0.0141
+      },
+      {
+        "feature": "Housing_rent",
+        "raw_feature": "cat__Housing_rent",
+        "mean_abs_shap": 0.0108
+      },
+      {
+        "feature": "Sex_female",
+        "raw_feature": "cat__Sex_female",
+        "mean_abs_shap": 0.0106
+      },
+      {
+        "feature": "Saving accounts_rich",
+        "raw_feature": "cat__Saving accounts_rich",
+        "mean_abs_shap": 0.0094
+      },
+      {
+        "feature": "Sex_male",
+        "raw_feature": "cat__Sex_male",
+        "mean_abs_shap": 0.009
+      }
+    ]
+  },
+  "sample_applicants": [
+    {
+      "id": "sample-1",
+      "label": "Low Risk Profile (Stable, established professional)",
+      "data": {
+        "Age": 45,
+        "Job": 2,
+        "Sex": "male",
+        "Housing": "own",
+        "Saving accounts": "quite rich",
+        "Checking account": "rich",
+        "Credit amount": 2500,
+        "Duration": 12,
+        "Purpose": "car"
+      }
+    },
+    {
+      "id": "sample-2",
+      "label": "Moderate / Borderline Risk Profile (Young professional, mid-sized loan)",
+      "data": {
+        "Age": 28,
+        "Job": 2,
+        "Sex": "female",
+        "Housing": "rent",
+        "Saving accounts": "moderate",
+        "Checking account": "moderate",
+        "Credit amount": 4800,
+        "Duration": 24,
+        "Purpose": "furniture/equipment"
+      }
+    },
+    {
+      "id": "sample-3",
+      "label": "High Risk Profile (Extended term, high amount, limited savings)",
+      "data": {
+        "Age": 23,
+        "Job": 1,
+        "Sex": "male",
+        "Housing": "rent",
+        "Saving accounts": "little",
+        "Checking account": "little",
+        "Credit amount": 9200,
+        "Duration": 48,
+        "Purpose": "business"
+      }
+    }
+  ]
+}
