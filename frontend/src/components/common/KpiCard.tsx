@@ -24,40 +24,42 @@ export const KpiCard: React.FC<KpiCardProps> = ({
   className = '',
 }) => {
   const badgeClasses = {
-    positive: 'bg-emerald-50 text-emerald-800 border-emerald-200',
-    warning: 'bg-amber-50 text-amber-800 border-amber-200',
-    neutral: 'bg-slate-100 text-slate-700 border-slate-200',
-    info: 'bg-blue-50 text-blue-800 border-blue-200',
+    positive: 'bg-[#EDF5F0] text-[#287653] border-[#DCE8DF]',
+    warning: 'bg-[#FAF4EB] text-[#B17B35] border-[#F2EBDD]',
+    neutral: 'bg-[#F8F8F4] text-[#68736D] border-[#E0E4DD]',
+    info: 'bg-[#F1F5F0] text-[#173F35] border-[#DCE8DF]',
   };
 
   return (
     <div
       onClick={onClick}
-      className={`bg-white rounded-xl border border-slate-200 p-5 shadow-xs transition-all ${
-        onClick ? 'cursor-pointer hover:border-blue-400 hover:shadow-md' : ''
+      className={`bg-white rounded-xl border border-[#E0E4DD] p-5 shadow-[0_1px_3px_0_rgba(32,44,40,0.04)] transition-all duration-200 select-none ${
+        onClick
+          ? 'cursor-pointer hover:-translate-y-0.5 hover:border-[#315F50]/40 hover:shadow-[0_4px_6px_-1px_rgba(32,44,40,0.06)]'
+          : ''
       } ${className}`}
     >
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-[#849087]">
             {title}
           </p>
-          <p className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1.5 tracking-tight">
+          <p className="text-2xl sm:text-[26px] font-bold text-[#202C28] mt-1.5 tracking-tight">
             {value}
           </p>
         </div>
-        <div className="p-2.5 rounded-lg bg-blue-50 text-blue-900 border border-blue-100 flex items-center justify-center">
-          <Icon className="w-5 h-5" aria-hidden="true" />
+        <div className="w-10 h-10 rounded-lg bg-[#F1F5F0] text-[#173F35] border border-[#E0E4DD] flex items-center justify-center shrink-0">
+          <Icon className="w-4.5 h-4.5" aria-hidden="true" />
         </div>
       </div>
 
-      <div className="mt-3 flex items-center justify-between gap-2">
+      <div className="mt-3.5 flex items-center justify-between gap-2 pt-2.5 border-t border-[#F8F8F4]">
         {subtitle && (
-          <p className="text-xs text-slate-600 line-clamp-1">{subtitle}</p>
+          <p className="text-xs text-[#68736D] line-clamp-1">{subtitle}</p>
         )}
         {badge && (
           <span
-            className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${
+            className={`text-[10px] font-semibold px-2 py-0.5 rounded border shrink-0 ${
               badgeClasses[badge.variant]
             }`}
           >
@@ -68,3 +70,5 @@ export const KpiCard: React.FC<KpiCardProps> = ({
     </div>
   );
 };
+
+export default KpiCard;

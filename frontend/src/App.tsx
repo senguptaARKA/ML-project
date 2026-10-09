@@ -27,6 +27,7 @@ import { ModelComparisonTable } from './components/performance/ModelComparisonTa
 import { RocPrCurves } from './components/performance/RocPrCurves';
 import { ConfusionMatrixView } from './components/performance/ConfusionMatrixView';
 import { InterpretabilityScatter } from './components/performance/InterpretabilityScatter';
+import { ModelBenchmarkChart } from './components/performance/ModelBenchmarkChart';
 import { FairnessMetrics } from './components/fairness/FairnessMetrics';
 import { DatasetAnalytics } from './components/dataset/DatasetAnalytics';
 import { PipelineDiagram } from './components/about/PipelineDiagram';
@@ -105,11 +106,11 @@ export const App: React.FC = () => {
 
   if (!projectData) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#102F29] flex items-center justify-center p-4">
         <div className="text-center space-y-4">
-          <div className="w-12 h-12 border-4 border-blue-400 border-t-white rounded-full animate-spin mx-auto" />
-          <h2 className="text-white text-lg font-bold">CrediTrust AI Portal</h2>
-          <p className="text-slate-400 text-xs">Loading Explainable Credit Risk Engine...</p>
+          <div className="w-10 h-10 border-2 border-[#315F50] border-t-white rounded-full animate-spin mx-auto" />
+          <h2 className="text-white text-base font-semibold tracking-tight">CrediTrust AI Portal</h2>
+          <p className="text-[#DCE8DF] text-xs">Initializing Explainable Underwriting & Governance Engine...</p>
         </div>
       </div>
     );
@@ -123,29 +124,39 @@ export const App: React.FC = () => {
     activePage === 'about';
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col lg:flex-row font-sans text-slate-800">
-      {/* Sidebar Navigation with clear visual divisions */}
-      <Sidebar
+    <div
+      className={`min-h-screen ${
+        activePage === 'dashboard' ? 'bg-[#06140F] text-[#F1F5F0]' : 'bg-[#F5F5F0] text-[#202C28]'
+      } flex flex-col font-sans transition-colors duration-300 relative`}
+    >
+      {/* Top Application Header */}
+      <Navbar
         activePage={activePage}
-        onNavigate={(p) => setActivePage(p)}
-        isCollapsed={isCollapsed}
-        onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
-        isMobileOpen={isMobileOpen}
-        onCloseMobile={() => setIsMobileOpen(false)}
-        hasAssessment={!!assessmentResult}
+        onOpenMobileSidebar={() => setIsMobileOpen(true)}
+        onOpenHelp={() => setIsHelpOpen(true)}
+        onNavigateToAssessment={() => setActivePage('assessment')}
+        backendOnline={backendOnline}
       />
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0">
-        <Navbar
+      {/* Workspace Area: Sidebar + Main Content */}
+      <div className="flex-1 flex flex-col lg:flex-row min-w-0 relative">
+        <Sidebar
           activePage={activePage}
-          onOpenMobileSidebar={() => setIsMobileOpen(true)}
-          onOpenHelp={() => setIsHelpOpen(true)}
-          onNavigateToAssessment={() => setActivePage('assessment')}
-          backendOnline={backendOnline}
+          onNavigate={(p) => setActivePage(p)}
+          isCollapsed={isCollapsed}
+          onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
+          isMobileOpen={isMobileOpen}
+          onCloseMobile={() => setIsMobileOpen(false)}
+          hasAssessment={!!assessmentResult}
         />
 
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-8">
+        <main
+          className={
+            activePage === 'dashboard'
+              ? 'flex-1 min-w-0 relative w-full'
+              : 'flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-8'
+          }
+        >
           {/* 1. EXECUTIVE DASHBOARD OVERVIEW */}
           {activePage === 'dashboard' && (
             <DashboardOverview
@@ -180,6 +191,11 @@ export const App: React.FC = () => {
                   <ModelComparisonTable
                     models={projectData.models.comparison_table}
                     bestModelName={projectData.models.best_model}
+                  />
+
+                  <ModelBenchmarkChart
+                    comparisonTable={projectData.models.comparison_table}
+                    bestModel={projectData.models.best_model}
                   />
 
                   <RocPrCurves

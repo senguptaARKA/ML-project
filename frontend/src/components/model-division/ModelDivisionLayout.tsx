@@ -6,10 +6,6 @@ import {
   Database,
   Cpu,
   ShieldCheck,
-  Trophy,
-  CheckCircle2,
-  Layers,
-  ArrowRight,
 } from 'lucide-react';
 
 interface ModelDivisionLayoutProps {
@@ -72,87 +68,84 @@ export const ModelDivisionLayout: React.FC<ModelDivisionLayoutProps> = ({
 
   return (
     <div className="space-y-8 animate-fade-in">
-      {/* Division Header Banner */}
-      <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-2xl p-6 sm:p-8 text-white relative overflow-hidden shadow-sm border border-slate-800">
+      {/* Institutional Division Header Banner */}
+      <div className="bg-gradient-to-br from-[#102F29] via-[#173F35] to-[#102F29] rounded-2xl p-6 sm:p-8 text-white relative overflow-hidden shadow-[0_2px_8px_rgba(16,47,41,0.12)] border border-[#315F50]/40">
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div className="space-y-2 max-w-2xl">
+          <div className="space-y-3 max-w-2xl">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 text-xs font-semibold">
-                <ShieldCheck className="w-3.5 h-3.5 text-indigo-300" />
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-[#173F35] text-[#DCE8DF] border border-[#315F50] text-xs font-semibold">
+                <ShieldCheck className="w-3.5 h-3.5 text-[#DCE8DF]" />
                 Model Intelligence & Governance Division
               </span>
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[11px] font-medium">
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-[#173F35] text-[#DCE8DF] border border-[#315F50] text-[11px] font-medium">
                 Audited & Benchmarked
               </span>
             </div>
 
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
               Model Performance, Fairness & Dataset Governance
             </h2>
 
-            <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+            <p className="text-[#DCE8DF] text-xs sm:text-[13px] leading-relaxed">
               Institutional auditing suite for the credit scoring engine. Compare predictive metrics across algorithms, review algorithmic fairness parity tests under ECOA/FCRA guidelines, inspect training cohort distributions, and explore the end-to-end ML architecture.
             </p>
           </div>
 
           {/* Quick Division Summary Metrics */}
           <div className="grid grid-cols-2 sm:grid-cols-2 gap-3 shrink-0 lg:max-w-xs w-full">
-            <div className="bg-slate-800/80 backdrop-blur-xs rounded-xl p-3 border border-slate-700/60">
-              <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
+            <div className="bg-[#173F35]/70 rounded-xl p-3 border border-[#315F50]/50 shadow-2xs">
+              <span className="text-[10px] uppercase font-semibold text-[#DCE8DF]/70 block tracking-wider">
                 Champion Model
               </span>
               <span className="text-sm font-bold text-white block mt-0.5 truncate">
                 {modelsData.best_model}
               </span>
-              <span className="text-[11px] text-emerald-400 font-semibold block mt-0.5">
+              <span className="text-[11px] text-[#DCE8DF] font-semibold block mt-0.5">
                 {(bestModel.roc_auc * 100).toFixed(1)}% ROC-AUC
               </span>
             </div>
 
-            <div className="bg-slate-800/80 backdrop-blur-xs rounded-xl p-3 border border-slate-700/60">
-              <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
+            <div className="bg-[#173F35]/70 rounded-xl p-3 border border-[#315F50]/50 shadow-2xs">
+              <span className="text-[10px] uppercase font-semibold text-[#DCE8DF]/70 block tracking-wider">
                 Fairness Metric
               </span>
               <span className="text-sm font-bold text-white block mt-0.5">
                 {fairnessData.demographic_parity_difference.toFixed(3)} Diff
               </span>
-              <span className="text-[11px] text-emerald-400 font-semibold block mt-0.5">
+              <span className="text-[11px] text-[#DCE8DF] font-semibold block mt-0.5">
                 {fairnessData.demographic_parity_status}
               </span>
             </div>
 
-            <div className="bg-slate-800/80 backdrop-blur-xs rounded-xl p-3 border border-slate-700/60">
-              <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
+            <div className="bg-[#173F35]/70 rounded-xl p-3 border border-[#315F50]/50 shadow-2xs">
+              <span className="text-[10px] uppercase font-semibold text-[#DCE8DF]/70 block tracking-wider">
                 Dataset Cohort
               </span>
               <span className="text-sm font-bold text-white block mt-0.5">
                 {datasetData.total_applicants.toLocaleString()} Records
               </span>
-              <span className="text-[11px] text-blue-300 font-semibold block mt-0.5">
+              <span className="text-[11px] text-[#DCE8DF] font-semibold block mt-0.5">
                 German Credit
               </span>
             </div>
 
-            <div className="bg-slate-800/80 backdrop-blur-xs rounded-xl p-3 border border-slate-700/60">
-              <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
+            <div className="bg-[#173F35]/70 rounded-xl p-3 border border-[#315F50]/50 shadow-2xs">
+              <span className="text-[10px] uppercase font-semibold text-[#DCE8DF]/70 block tracking-wider">
                 Audit Scope
               </span>
               <span className="text-sm font-bold text-white block mt-0.5">
                 Full Pipeline
               </span>
-              <span className="text-[11px] text-indigo-300 font-semibold block mt-0.5">
+              <span className="text-[11px] text-[#DCE8DF] font-semibold block mt-0.5">
                 ECOA / FCRA
               </span>
             </div>
           </div>
         </div>
-
-        {/* Ambient background glow */}
-        <div className="absolute right-0 top-0 bottom-0 w-96 bg-radial from-indigo-600/10 to-transparent pointer-events-none" />
       </div>
 
       {/* Division Navigation Tabs (Top Segmented Switcher) */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-2 shadow-xs">
+      <div className="bg-white rounded-xl border border-[#E0E4DD] p-2 shadow-[0_1px_3px_0_rgba(32,44,40,0.04)]">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -162,16 +155,18 @@ export const ModelDivisionLayout: React.FC<ModelDivisionLayoutProps> = ({
               <button
                 key={tab.id}
                 onClick={() => onNavigate(tab.id)}
-                className={`flex items-center gap-3 p-3 rounded-xl text-left transition-all relative ${
+                className={`flex items-center gap-3 p-3 rounded-lg text-left transition-all duration-200 relative ${
                   isActive
-                    ? 'bg-blue-900 text-white shadow-xs'
-                    : 'bg-slate-50/60 hover:bg-slate-100/80 text-slate-700 hover:text-slate-900 border border-slate-200/60'
+                    ? 'bg-[#173F35] text-white shadow-xs'
+                    : 'bg-[#F8F8F4] hover:bg-[#F1F5F0] text-[#68736D] hover:text-[#173F35] border border-[#E0E4DD]'
                 }`}
                 aria-current={isActive ? 'page' : undefined}
               >
                 <div
-                  className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
-                    isActive ? 'bg-blue-800 text-blue-200' : 'bg-white text-slate-600 shadow-2xs border border-slate-200'
+                  className={`w-8 h-8 rounded-md flex items-center justify-center shrink-0 ${
+                    isActive
+                      ? 'bg-[#102F29] text-[#DCE8DF]'
+                      : 'bg-white text-[#68736D] border border-[#E0E4DD]'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
@@ -179,14 +174,14 @@ export const ModelDivisionLayout: React.FC<ModelDivisionLayoutProps> = ({
 
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-1">
-                    <span className="text-xs sm:text-sm font-bold truncate block">
+                    <span className="text-xs sm:text-[13px] font-bold truncate block">
                       {tab.label}
                     </span>
                     <span
-                      className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md shrink-0 hidden sm:inline-block ${
+                      className={`text-[10px] font-semibold px-1.5 py-0.5 rounded shrink-0 hidden sm:inline-block ${
                         isActive
-                          ? 'bg-blue-800 text-blue-100'
-                          : 'bg-slate-200 text-slate-700'
+                          ? 'bg-[#102F29] text-[#DCE8DF] border border-[#315F50]/60'
+                          : 'bg-[#F1F5F0] text-[#173F35] border border-[#E0E4DD]'
                       }`}
                     >
                       {tab.badge}
@@ -194,7 +189,7 @@ export const ModelDivisionLayout: React.FC<ModelDivisionLayoutProps> = ({
                   </div>
                   <span
                     className={`text-[11px] truncate block mt-0.5 ${
-                      isActive ? 'text-blue-200' : 'text-slate-500'
+                      isActive ? 'text-[#DCE8DF]' : 'text-[#849087]'
                     }`}
                   >
                     {tab.description}
@@ -211,4 +206,5 @@ export const ModelDivisionLayout: React.FC<ModelDivisionLayoutProps> = ({
     </div>
   );
 };
+
 export default ModelDivisionLayout;

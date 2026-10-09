@@ -29,13 +29,18 @@ export const RiskBadge: React.FC<RiskBadgeProps> = ({
     <span
       className={`inline-flex items-center rounded-full border transition-colors ${
         isGood
-          ? 'bg-emerald-50 text-emerald-800 border-emerald-200 shadow-sm'
-          : 'bg-rose-50 text-rose-800 border-rose-200 shadow-sm'
+          ? 'bg-[#EDF5F0] text-[#287653] border-[#DCE8DF]'
+          : 'bg-[#FAF0F0] text-[#B64D49] border-[#F2D5D4]'
       } ${sizeClasses[size]} ${className}`}
       role="status"
       aria-label={`Risk level: ${isGood ? 'Good Credit Risk' : 'Higher Credit Risk'}`}
     >
-      {showIcon && <Icon className={size === 'lg' ? 'w-5 h-5 text-emerald-600' : 'w-4 h-4'} aria-hidden="true" />}
+      {showIcon && (
+        <Icon
+          className={`${size === 'lg' ? 'w-5 h-5' : 'w-4 h-4'} ${isGood ? 'text-[#287653]' : 'text-[#B64D49]'}`}
+          aria-hidden="true"
+        />
+      )}
       <span>{isGood ? 'Good Credit Risk' : 'Higher Credit Risk'}</span>
     </span>
   );

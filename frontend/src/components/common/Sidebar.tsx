@@ -6,12 +6,9 @@ import {
   Scale,
   Database,
   Info,
-  ShieldCheck,
   ChevronLeft,
   ChevronRight,
   X,
-  Sparkles,
-  Layers,
 } from 'lucide-react';
 import { ActivePage } from '../../types';
 
@@ -32,7 +29,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onToggleCollapse,
   isMobileOpen,
   onCloseMobile,
-  hasAssessment,
 }) => {
   // Division 1: Individual Applicant Decisioning & XAI
   const decisioningItems = [
@@ -84,6 +80,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
     onCloseMobile();
   };
 
+  const isDashboard = activePage === 'dashboard';
+
   const renderNavButton = (item: {
     id: ActivePage;
     label: string;
@@ -100,30 +98,44 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <button
         key={item.id}
         onClick={() => handleNavClick(item.id)}
-        className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-left transition-all relative group ${isActive
-            ? 'bg-blue-900 text-white shadow-xs font-semibold'
-            : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium'
-          }`}
+        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all duration-200 relative group select-none cursor-pointer ${
+          isActive
+            ? isDashboard
+              ? 'bg-[#173F35]/90 text-white shadow-sm font-semibold border border-[#AECFBE]/30'
+              : 'bg-[#173F35] text-white shadow-xs font-semibold'
+            : isDashboard
+            ? 'text-[#DCE8DF] hover:bg-white/10 hover:text-white hover:scale-[1.015] border border-transparent hover:border-[#6A9443]/30 font-medium'
+            : 'text-[#68736D] hover:bg-[#F1F5F0] hover:text-[#173F35] hover:scale-[1.015] font-medium'
+        }`}
         title={isCollapsed ? item.label : undefined}
         aria-current={isActive ? 'page' : undefined}
       >
         <Icon
-          className={`w-5 h-5 shrink-0 transition-colors ${isActive ? 'text-blue-200' : 'text-slate-500 group-hover:text-blue-900'
-            }`}
+          className={`w-4 h-4 shrink-0 transition-colors ${
+            isActive
+              ? 'text-[#DCE8DF]'
+              : isDashboard
+              ? 'text-[#ABB89C] group-hover:text-white'
+              : 'text-[#849087] group-hover:text-[#173F35]'
+          }`}
           aria-hidden="true"
         />
 
         {!isCollapsed && (
           <div className="flex-1 flex items-center justify-between min-w-0">
-            <span className="text-xs sm:text-sm font-semibold tracking-tight truncate">
+            <span className="text-xs sm:text-[13px] tracking-tight truncate">
               {item.label}
             </span>
+
             {item.badge && (
               <span
-                className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md shrink-0 ml-1.5 ${isActive
-                    ? 'bg-blue-800 text-blue-200'
-                    : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                  }`}
+                className={`text-[10px] font-semibold px-1.5 py-0.5 rounded shrink-0 ml-1.5 transition-colors ${
+                  isActive
+                    ? 'bg-[#102F29] text-[#DCE8DF] border border-[#315F50]/60'
+                    : isDashboard
+                    ? 'bg-white/10 text-[#DCE8DF] border border-white/15'
+                    : 'bg-[#F1F5F0] text-[#173F35] border border-[#E0E4DD]'
+                }`}
               >
                 {item.badge}
               </span>
@@ -135,29 +147,33 @@ export const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const sidebarContent = (
-    <div className="flex flex-col h-full bg-white border-r border-slate-200 select-none">
-      {/* Brand Header */}
-      <div className="h-16 px-4 flex items-center justify-between border-b border-slate-100">
-        <div className="flex items-center gap-3 overflow-hidden">
-          <div className="w-9 h-9 rounded-xl bg-blue-900 text-white flex items-center justify-center shrink-0 shadow-xs">
-            <ShieldCheck className="w-5 h-5 text-blue-200" aria-hidden="true" />
-          </div>
-          {!isCollapsed && (
-            <div className="truncate">
-              <span className="font-extrabold text-base tracking-tight text-slate-900 block leading-tight">
-                CrediTrust <span className="text-blue-900 font-bold">AI</span>
-              </span>
-              <span className="text-[10px] font-semibold text-slate-400 block tracking-wider uppercase">
-                Underwriting & Governance
-              </span>
-            </div>
-          )}
-        </div>
-
-        {/* Mobile close button */}
+    <div
+      className={`flex flex-col h-full select-none transition-colors duration-300 ${
+        isDashboard
+          ? 'bg-[#0A211A]/85 backdrop-blur-2xl border-r border-[#AECFBE]/20 text-[#F1F5F0]'
+          : 'bg-white border-r border-[#E0E4DD] text-[#202C28]'
+      }`}
+    >
+      {/* Mobile-only drawer close header */}
+      <div
+        className={`lg:hidden h-14 px-4 flex items-center justify-between border-b ${
+          isDashboard ? 'border-[#AECFBE]/20' : 'border-[#E0E4DD]'
+        }`}
+      >
+        <span
+          className={`text-xs font-semibold uppercase tracking-wider ${
+            isDashboard ? 'text-[#ABB89C]' : 'text-[#849087]'
+          }`}
+        >
+          Navigation Menu
+        </span>
         <button
           onClick={onCloseMobile}
-          className="lg:hidden p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100"
+          className={`p-1.5 rounded-md transition-colors cursor-pointer ${
+            isDashboard
+              ? 'text-[#ABB89C] hover:text-white hover:bg-white/10'
+              : 'text-[#849087] hover:text-[#202C28] hover:bg-[#F1F5F0]'
+          }`}
           aria-label="Close menu"
         >
           <X className="w-5 h-5" />
@@ -166,38 +182,56 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Navigation List Organized by Divisions */}
       <nav className="flex-1 px-3 py-4 space-y-4 overflow-y-auto" aria-label="Main Navigation">
-        {/* DIVISION 1: APPLICANT DECISIONING & XAI */}
+        {/* DIVISION 1: APPLICANT DECISIONING */}
         <div>
           {!isCollapsed && (
             <div className="px-3 pb-1.5 flex items-center justify-between">
-              <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+              <span
+                className={`text-[10px] font-semibold uppercase tracking-wider ${
+                  isDashboard ? 'text-[#ABB89C]' : 'text-[#849087]'
+                }`}
+              >
                 Applicant Decisioning
               </span>
-              {/* <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
-                Tab 1
-              </span> */}
             </div>
           )}
-          {isCollapsed && <div className="my-1.5 border-t border-slate-100" />}
+          {isCollapsed && (
+            <div
+              className={`my-1.5 border-t ${
+                isDashboard ? 'border-[#AECFBE]/15' : 'border-[#E0E4DD]'
+              }`}
+            />
+          )}
 
           <div className="space-y-1">
             {decisioningItems.map(renderNavButton)}
           </div>
         </div>
 
-        {/* DIVISION 2: MODEL INTELLIGENCE & GOVERNANCE */}
-        <div className="pt-2 border-t border-slate-100">
+        {/* DIVISION 2: MODEL INTELLIGENCE */}
+        <div
+          className={`pt-2 border-t ${
+            isDashboard ? 'border-[#AECFBE]/15' : 'border-[#E0E4DD]'
+          }`}
+        >
           {!isCollapsed && (
             <div className="px-3 pb-1.5 flex items-center justify-between">
-              <span className="text-[10px] font-extrabold uppercase tracking-wider text-indigo-700">
+              <span
+                className={`text-[10px] font-semibold uppercase tracking-wider ${
+                  isDashboard ? 'text-[#ABB89C]' : 'text-[#849087]'
+                }`}
+              >
                 Model Intelligence
-              </span>
-              <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 uppercase tracking-wider">
-                Division
               </span>
             </div>
           )}
-          {isCollapsed && <div className="my-1.5 border-t border-slate-100" />}
+          {isCollapsed && (
+            <div
+              className={`my-1.5 border-t ${
+                isDashboard ? 'border-[#AECFBE]/15' : 'border-[#E0E4DD]'
+              }`}
+            />
+          )}
 
           <div className="space-y-1">
             {modelDivisionItems.map(renderNavButton)}
@@ -205,15 +239,35 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
       </nav>
 
-      {/* Desktop Collapse Toggle */}
-      <div className="hidden lg:flex px-3 py-3 border-t border-slate-100 justify-end">
+      {/* Desktop Collapse Toggle & Subtle Identity */}
+      <div
+        className={`hidden lg:flex px-3 py-3 border-t items-center justify-between ${
+          isDashboard ? 'border-[#AECFBE]/15' : 'border-[#E0E4DD]'
+        }`}
+      >
+        {!isCollapsed && (
+          <div className="flex items-center gap-1.5 overflow-hidden">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#287653]" />
+            <span
+              className={`text-[10px] font-semibold tracking-tight ${
+                isDashboard ? 'text-[#ABB89C]' : 'text-[#849087]'
+              }`}
+            >
+              CrediTrust AI
+            </span>
+          </div>
+        )}
         <button
           onClick={onToggleCollapse}
-          className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+          className={`p-1.5 rounded-md transition-colors ml-auto cursor-pointer ${
+            isDashboard
+              ? 'text-[#ABB89C] hover:text-white hover:bg-white/10'
+              : 'text-[#849087] hover:text-[#202C28] hover:bg-[#F1F5F0]'
+          }`}
           aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
-          {isCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
+          {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
         </button>
       </div>
     </div>
@@ -223,8 +277,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <>
       {/* Desktop Sidebar */}
       <aside
-        className={`hidden lg:block shrink-0 transition-all duration-300 ease-in-out h-screen sticky top-0 z-30 ${isCollapsed ? 'w-20' : 'w-64'
-          }`}
+        className={`hidden lg:block shrink-0 transition-all duration-300 ease-in-out h-[calc(100vh-4rem)] sticky top-16 z-20 ${
+          isCollapsed ? 'w-20' : 'w-64'
+        }`}
       >
         {sidebarContent}
       </aside>
@@ -232,7 +287,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Mobile Drawer Overlay */}
       {isMobileOpen && (
         <div
-          className="lg:hidden fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-xs transition-opacity"
+          className="lg:hidden fixed inset-0 z-40 bg-[#06140F]/70 backdrop-blur-xs transition-opacity"
           onClick={onCloseMobile}
           aria-hidden="true"
         />
@@ -240,8 +295,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Mobile Drawer */}
       <div
-        className={`lg:hidden fixed inset-y-0 left-0 z-50 w-72 bg-white transform transition-transform duration-300 ease-in-out shadow-2xl ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
+        className={`lg:hidden fixed inset-y-0 left-0 z-50 w-72 transform transition-transform duration-300 ease-in-out shadow-xl ${
+          isDashboard ? 'bg-[#0A211A]' : 'bg-white'
+        } ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         {sidebarContent}
       </div>

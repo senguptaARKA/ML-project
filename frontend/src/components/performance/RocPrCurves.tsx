@@ -24,11 +24,11 @@ export const RocPrCurves: React.FC<RocPrCurvesProps> = ({
   const [activeMetric, setActiveMetric] = useState<'roc' | 'pr'>('roc');
 
   const modelColors: Record<string, string> = {
-    'Logistic Regression': '#64748B',
-    'Random Forest': '#0284C7',
-    'XGBoost': '#D97706',
-    'LightGBM': '#7C3AED',
-    'Tuned Random Forest': '#1E3A8A',
+    'Tuned Random Forest': '#173F35',
+    'Random Forest': '#315F50',
+    'XGBoost': '#A88955',
+    'LightGBM': '#68736D',
+    'Logistic Regression': '#849087',
   };
 
   // Harmonize sample points for recharts
@@ -65,16 +65,16 @@ export const RocPrCurves: React.FC<RocPrCurvesProps> = ({
   });
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+    <div className="bg-white rounded-2xl border border-[#E0E4DD] p-6 sm:p-8 shadow-xs space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#E0E4DD]">
         <div>
           <div className="flex items-center gap-2">
-            <Activity className="w-5 h-5 text-blue-900" />
-            <h3 className="text-lg font-bold text-slate-900">
+            <Activity className="w-5 h-5 text-[#173F35]" />
+            <h3 className="text-lg font-bold text-[#202C28]">
               Discrimination Analysis: {activeMetric === 'roc' ? 'ROC Curves' : 'Precision-Recall Curves'}
             </h3>
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-xs text-[#68736D] mt-0.5">
             {activeMetric === 'roc'
               ? 'True Positive Rate vs False Positive Rate trade-offs across discrimination thresholds.'
               : 'Precision vs Recall trade-off emphasizing minority class default detection.'}
@@ -82,23 +82,23 @@ export const RocPrCurves: React.FC<RocPrCurvesProps> = ({
         </div>
 
         {/* Metric Switcher */}
-        <div className="flex items-center p-1 bg-slate-100 rounded-xl">
+        <div className="flex items-center p-1 bg-[#F1F5F0] border border-[#E0E4DD] rounded-xl">
           <button
             onClick={() => setActiveMetric('roc')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               activeMetric === 'roc'
-                ? 'bg-white text-blue-900 shadow-2xs'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-white text-[#173F35] shadow-2xs font-bold'
+                : 'text-[#68736D] hover:text-[#202C28]'
             }`}
           >
             ROC Curves (AUC)
           </button>
           <button
             onClick={() => setActiveMetric('pr')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               activeMetric === 'pr'
-                ? 'bg-white text-blue-900 shadow-2xs'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-white text-[#173F35] shadow-2xs font-bold'
+                : 'text-[#68736D] hover:text-[#202C28]'
             }`}
           >
             Precision-Recall Curves
@@ -112,7 +112,7 @@ export const RocPrCurves: React.FC<RocPrCurvesProps> = ({
             data={chartData}
             margin={{ top: 10, right: 30, left: 10, bottom: 20 }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#E0E4DD" />
             <XAxis
               dataKey="x"
               label={{
@@ -120,9 +120,9 @@ export const RocPrCurves: React.FC<RocPrCurvesProps> = ({
                 position: 'insideBottom',
                 offset: -10,
                 fontSize: 12,
-                fill: '#64748B',
+                fill: '#68736D',
               }}
-              tick={{ fontSize: 11, fill: '#64748B' }}
+              tick={{ fontSize: 11, fill: '#68736D' }}
             />
             <YAxis
               domain={[0, 1]}
@@ -131,16 +131,17 @@ export const RocPrCurves: React.FC<RocPrCurvesProps> = ({
                 angle: -90,
                 position: 'insideLeft',
                 fontSize: 12,
-                fill: '#64748B',
+                fill: '#68736D',
               }}
-              tick={{ fontSize: 11, fill: '#64748B' }}
+              tick={{ fontSize: 11, fill: '#68736D' }}
             />
             <Tooltip
               formatter={(val: any, name: any) => [`${(Number(val) * 100).toFixed(1)}%`, name]}
               contentStyle={{
-                backgroundColor: '#0F172A',
-                borderRadius: '0.75rem',
-                color: '#fff',
+                backgroundColor: '#102F29',
+                border: '1px solid #315F50',
+                borderRadius: '0.5rem',
+                color: '#F1F5F0',
                 fontSize: '12px',
               }}
             />
@@ -150,7 +151,7 @@ export const RocPrCurves: React.FC<RocPrCurvesProps> = ({
               <Line
                 type="monotone"
                 dataKey="Random Guess"
-                stroke="#94A3B8"
+                stroke="#849087"
                 strokeDasharray="4 4"
                 strokeWidth={1.5}
                 dot={false}
@@ -162,8 +163,8 @@ export const RocPrCurves: React.FC<RocPrCurvesProps> = ({
                 key={name}
                 type="monotone"
                 dataKey={name}
-                stroke={modelColors[name] || '#3B82F6'}
-                strokeWidth={name === 'Tuned Random Forest' ? 3 : 1.8}
+                stroke={modelColors[name] || '#173F35'}
+                strokeWidth={name === 'Tuned Random Forest' ? 2.8 : 1.8}
                 dot={false}
               />
             ))}
