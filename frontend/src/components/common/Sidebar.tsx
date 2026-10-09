@@ -100,18 +100,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <button
         key={item.id}
         onClick={() => handleNavClick(item.id)}
-        className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-left transition-all relative group ${
-          isActive
+        className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-left transition-all relative group ${isActive
             ? 'bg-blue-900 text-white shadow-xs font-semibold'
             : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium'
-        }`}
+          }`}
         title={isCollapsed ? item.label : undefined}
         aria-current={isActive ? 'page' : undefined}
       >
         <Icon
-          className={`w-5 h-5 shrink-0 transition-colors ${
-            isActive ? 'text-blue-200' : 'text-slate-500 group-hover:text-blue-900'
-          }`}
+          className={`w-5 h-5 shrink-0 transition-colors ${isActive ? 'text-blue-200' : 'text-slate-500 group-hover:text-blue-900'
+            }`}
           aria-hidden="true"
         />
 
@@ -122,11 +120,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </span>
             {item.badge && (
               <span
-                className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md shrink-0 ml-1.5 ${
-                  isActive
+                className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md shrink-0 ml-1.5 ${isActive
                     ? 'bg-blue-800 text-blue-200'
                     : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                }`}
+                  }`}
               >
                 {item.badge}
               </span>
@@ -176,9 +173,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
                 Applicant Decisioning
               </span>
-              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+              {/* <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
                 Tab 1
-              </span>
+              </span> */}
             </div>
           )}
           {isCollapsed && <div className="my-1.5 border-t border-slate-100" />}
@@ -226,9 +223,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <>
       {/* Desktop Sidebar */}
       <aside
-        className={`hidden lg:block shrink-0 transition-all duration-300 ease-in-out h-screen sticky top-0 z-30 ${
-          isCollapsed ? 'w-20' : 'w-64'
-        }`}
+        className={`hidden lg:block shrink-0 transition-all duration-300 ease-in-out h-screen sticky top-0 z-30 ${isCollapsed ? 'w-20' : 'w-64'
+          }`}
       >
         {sidebarContent}
       </aside>
@@ -244,9 +240,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Mobile Drawer */}
       <div
-        className={`lg:hidden fixed inset-y-0 left-0 z-50 w-72 bg-white transform transition-transform duration-300 ease-in-out shadow-2xl ${
-          isMobileOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`lg:hidden fixed inset-y-0 left-0 z-50 w-72 bg-white transform transition-transform duration-300 ease-in-out shadow-2xl ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
       >
         {sidebarContent}
       </div>
