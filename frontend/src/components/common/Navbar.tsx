@@ -6,6 +6,7 @@ import {
   Shield,
   Activity,
   PlusCircle,
+  Layers,
 } from 'lucide-react';
 import { ActivePage } from '../../types';
 
@@ -24,45 +25,64 @@ export const Navbar: React.FC<NavbarProps> = ({
   onNavigateToAssessment,
   backendOnline,
 }) => {
-  const pageTitles: Record<ActivePage, { title: string; subtitle: string }> = {
+  const pageTitles: Record<
+    ActivePage,
+    { title: string; subtitle: string; division: string; divisionBadgeClass: string }
+  > = {
     dashboard: {
       title: 'Executive Dashboard',
-      subtitle: 'Portfolio Health & Model Governance',
+      subtitle: 'Portfolio Health & ML Governance',
+      division: 'Decisioning Hub',
+      divisionBadgeClass: 'bg-slate-100 text-slate-700 border-slate-200',
     },
     assessment: {
-      title: 'Credit Risk Assessment',
-      subtitle: 'Multi-Step Transparent Underwriting',
+      title: 'Credit Risk Assessment & Explainability',
+      subtitle: 'Interactive Underwriting, SHAP Waterfall & What-If Recourse',
+      division: 'Decisioning Workspace',
+      divisionBadgeClass: 'bg-blue-50 text-blue-800 border-blue-200',
     },
     explainability: {
-      title: 'Model Explainability (XAI)',
-      subtitle: 'SHAP, LIME & Counterfactual Recourse',
+      title: 'Credit Risk Assessment & Explainability',
+      subtitle: 'Interactive Underwriting, SHAP Waterfall & What-If Recourse',
+      division: 'Decisioning Workspace',
+      divisionBadgeClass: 'bg-blue-50 text-blue-800 border-blue-200',
     },
     performance: {
-      title: 'Model Performance & Benchmark',
-      subtitle: 'Algorithms Comparison & ROC Evaluation',
+      title: 'Model Performance & Benchmarking',
+      subtitle: 'Comparative Evaluation Across 4 Algorithms & ROC Curves',
+      division: 'Model Intelligence Division',
+      divisionBadgeClass: 'bg-indigo-50 text-indigo-800 border-indigo-200',
     },
     fairness: {
-      title: 'Algorithmic Fairness & Bias',
-      subtitle: 'Demographic Parity & Equalized Odds Audit',
+      title: 'Algorithmic Fairness & Bias Audit',
+      subtitle: 'Demographic Parity & Equalized Odds Across Protected Classes',
+      division: 'Model Intelligence Division',
+      divisionBadgeClass: 'bg-indigo-50 text-indigo-800 border-indigo-200',
     },
     dataset: {
-      title: 'German Credit Dataset Insights',
-      subtitle: 'Cohort Distributions & Feature Explorer',
+      title: 'German Credit Dataset Analytics',
+      subtitle: 'Cohort Distributions, Risk Disparities & Feature Profiling',
+      division: 'Model Intelligence Division',
+      divisionBadgeClass: 'bg-indigo-50 text-indigo-800 border-indigo-200',
     },
     about: {
-      title: 'Model Architecture & Governance',
-      subtitle: 'Pipeline Methodology & Compliance Standards',
+      title: 'Model Architecture & ML Pipeline',
+      subtitle: 'End-to-End Methodology, Preprocessing & Explainability Stack',
+      division: 'Model Intelligence Division',
+      divisionBadgeClass: 'bg-indigo-50 text-indigo-800 border-indigo-200',
     },
   };
 
   const currentInfo = pageTitles[activePage] || {
     title: 'Explainable AI Credit Risk',
     subtitle: 'Banking Assessment',
+    division: 'Portal',
+    divisionBadgeClass: 'bg-slate-100 text-slate-700 border-slate-200',
   };
 
   return (
     <header className="sticky top-0 z-20 bg-white/95 backdrop-blur-xs border-b border-slate-200 h-16 px-4 sm:px-6 flex items-center justify-between">
-      {/* Left: Mobile hamburger & Page Title */}
+      {/* Left: Mobile hamburger & Page Title with Division Tag */}
       <div className="flex items-center gap-3">
         <button
           onClick={onOpenMobileSidebar}
@@ -73,9 +93,16 @@ export const Navbar: React.FC<NavbarProps> = ({
         </button>
 
         <div>
-          <h1 className="text-base sm:text-lg font-bold text-slate-900 leading-tight">
-            {currentInfo.title}
-          </h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-base sm:text-lg font-bold text-slate-900 leading-tight">
+              {currentInfo.title}
+            </h1>
+            <span
+              className={`hidden md:inline-flex text-[10px] font-bold px-2 py-0.5 rounded-md border ${currentInfo.divisionBadgeClass}`}
+            >
+              {currentInfo.division}
+            </span>
+          </div>
           <p className="text-xs text-slate-500 hidden sm:block leading-tight">
             {currentInfo.subtitle}
           </p>
@@ -114,8 +141,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           </span>
         </div>
 
-        {/* Quick CTA to New Assessment if on another page */}
-        {activePage !== 'assessment' && (
+        {/* Quick CTA to Assessment & Explainability if on another page */}
+        {activePage !== 'assessment' && activePage !== 'explainability' && (
           <button
             onClick={onNavigateToAssessment}
             className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold shadow-xs transition-colors"
@@ -153,3 +180,5 @@ export const Navbar: React.FC<NavbarProps> = ({
     </header>
   );
 };
+
+export default Navbar;

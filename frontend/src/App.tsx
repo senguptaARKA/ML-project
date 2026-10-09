@@ -12,19 +12,17 @@ import {
 } from './services/api';
 import { predictLocally } from './services/localModel';
 
-// Common Components
+// Common Navigation & Modal Components
 import { Sidebar } from './components/common/Sidebar';
 import { Navbar } from './components/common/Navbar';
 import { HelpModal } from './components/common/HelpModal';
 
-// Page Components
+// Decisioning Division Components
 import { DashboardOverview } from './components/dashboard/DashboardOverview';
-import { ApplicantForm } from './components/assessment/ApplicantForm';
-import { PredictionResultCard } from './components/assessment/PredictionResultCard';
-import { TopFactorsCard } from './components/explainability/TopFactorsCard';
-import { ShapChart } from './components/explainability/ShapChart';
-import { LimeExplanation } from './components/explainability/LimeExplanation';
-import { CounterfactualCard } from './components/explainability/CounterfactualCard';
+import { AssessmentExplainabilityView } from './components/assessment/AssessmentExplainabilityView';
+
+// Model Intelligence Division Components
+import { ModelDivisionLayout } from './components/model-division/ModelDivisionLayout';
 import { ModelComparisonTable } from './components/performance/ModelComparisonTable';
 import { RocPrCurves } from './components/performance/RocPrCurves';
 import { ConfusionMatrixView } from './components/performance/ConfusionMatrixView';
@@ -56,7 +54,7 @@ export const App: React.FC = () => {
       if (isMounted) {
         setProjectData(data);
 
-        // Pre-evaluate default sample applicant so Explainability page is immediately active
+        // Pre-evaluate default sample applicant so Explainability is immediately active
         if (data.sample_applicants && data.sample_applicants.length > 0) {
           const defaultSample = data.sample_applicants[1].data; // Sample 2 (Moderate risk)
           const initialPrediction = predictLocally(defaultSample);
@@ -117,9 +115,16 @@ export const App: React.FC = () => {
     );
   }
 
+  // Determine if the current page belongs to the Model Intelligence Division
+  const isModelDivisionPage =
+    activePage === 'performance' ||
+    activePage === 'fairness' ||
+    activePage === 'dataset' ||
+    activePage === 'about';
+
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col lg:flex-row font-sans text-slate-800">
-      {/* Sidebar Navigation */}
+      {/* Sidebar Navigation with clear visual divisions */}
       <Sidebar
         activePage={activePage}
         onNavigate={(p) => setActivePage(p)}
@@ -141,7 +146,7 @@ export const App: React.FC = () => {
         />
 
         <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-8">
-          {/* 1. DASHBOARD PAGE */}
+          {/* 1. EXECUTIVE DASHBOARD OVERVIEW */}
           {activePage === 'dashboard' && (
             <DashboardOverview
               data={projectData}
@@ -149,135 +154,71 @@ export const App: React.FC = () => {
             />
           )}
 
-          {/* 2. CREDIT ASSESSMENT PAGE */}
-          {activePage === 'assessment' && (
-            <div className="space-y-8">
-              <ApplicantForm
-                onSubmit={handleAssessApplicant}
-                isLoading={isLoadingAssessment}
-                sampleApplicants={projectData.sample_applicants}
-              />
+          {/* 2. UNIFIED CREDIT ASSESSMENT & EXPLAINABILITY TAB */}
+          {(activePage === 'assessment' || activePage === 'explainability') && (
+            <AssessmentExplainabilityView
+              projectData={projectData}
+              assessmentResult={assessmentResult}
+              isLoadingAssessment={isLoadingAssessment}
+              onAssessApplicant={handleAssessApplicant}
+              onSimulateChange={handleSimulateChange}
+            />
+          )}
 
-              {/* Prediction Result Display */}
-              {assessmentResult && (
-                <div id="assessment-result-section">
-                  <PredictionResultCard
-                    result={assessmentResult}
-                    onExploreExplainability={() => setActivePage('explainability')}
-                    onNewAssessment={() => {
-                      const element = document.getElementById('input-age');
-                      element?.scrollIntoView({ behavior: 'smooth' });
-                    }}
+          {/* 3. MODEL INTELLIGENCE & GOVERNANCE DIVISION */}
+          {isModelDivisionPage && (
+            <ModelDivisionLayout
+              activePage={activePage}
+              onNavigate={(page) => setActivePage(page)}
+              modelsData={projectData.models}
+              fairnessData={projectData.fairness}
+              datasetData={projectData.dataset}
+            >
+              {/* Model Performance Tab */}
+              {activePage === 'performance' && (
+                <div className="space-y-8 animate-fade-in">
+                  <ModelComparisonTable
+                    models={projectData.models.comparison_table}
+                    bestModelName={projectData.models.best_model}
+                  />
+
+                  <RocPrCurves
+                    rocCurves={projectData.models.roc_curves}
+                    prCurves={projectData.models.pr_curves}
+                  />
+
+                  <ConfusionMatrixView
+                    matrices={projectData.models.confusion_matrices}
+                  />
+
+                  <InterpretabilityScatter
+                    data={projectData.models.interpretability_scatter}
                   />
                 </div>
               )}
-            </div>
-          )}
 
-          {/* 3. EXPLAINABILITY PAGE */}
-          {activePage === 'explainability' && (
-            <div className="space-y-8">
-              {assessmentResult ? (
-                <>
-                  <div className="bg-slate-900 text-white rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
-                    <div>
-                      <span className="text-[11px] uppercase font-bold text-blue-300 tracking-wider">
-                        Active Applicant Case File
-                      </span>
-                      <h2 className="text-xl font-bold mt-1">
-                        Explainability Breakdown for {assessmentResult.applicant_input.Sex === 'male' ? 'Male' : 'Female'} Applicant (Age {assessmentResult.applicant_input.Age})
-                      </h2>
-                      <p className="text-xs text-slate-300 mt-0.5">
-                        Evaluated Risk: <strong className={assessmentResult.risk === 'good' ? 'text-emerald-400' : 'text-rose-400'}>{assessmentResult.risk_label}</strong> &bull; Loan: ₹{assessmentResult.applicant_input['Credit amount'].toLocaleString()} over {assessmentResult.applicant_input.Duration} months
-                      </p>
-                    </div>
-
-                    <button
-                      onClick={() => setActivePage('assessment')}
-                      className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-semibold border border-slate-700 transition-colors self-start sm:self-auto"
-                    >
-                      Change Applicant Parameters
-                    </button>
-                  </div>
-
-                  {/* Top Factors Card */}
-                  <TopFactorsCard
-                    factorsIncreasingRisk={assessmentResult.factors_increasing_risk}
-                    factorsReducingRisk={assessmentResult.factors_reducing_risk}
-                  />
-
-                  {/* SHAP Chart */}
-                  <ShapChart
-                    features={assessmentResult.shap_features}
-                    baseValue={assessmentResult.shap_base_value}
-                  />
-
-                  {/* LIME Explanation */}
-                  <LimeExplanation
-                    limeFeatures={assessmentResult.lime_features}
-                    shapFeatures={assessmentResult.shap_features}
-                  />
-
-                  {/* Counterfactual Explanation */}
-                  <CounterfactualCard
-                    counterfactual={assessmentResult.counterfactual}
-                    currentApplicant={assessmentResult.applicant_input}
-                    isBadRisk={assessmentResult.risk === 'bad'}
-                    onSimulateChange={handleSimulateChange}
-                  />
-                </>
-              ) : (
-                <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center space-y-4">
-                  <h3 className="text-lg font-bold text-slate-900">No Applicant Assessed Yet</h3>
-                  <p className="text-xs text-slate-500 max-w-md mx-auto">
-                    Please submit an applicant profile on the Credit Assessment page to generate SHAP attributions, LIME weights, and counterfactual recourse.
-                  </p>
-                  <button
-                    onClick={() => setActivePage('assessment')}
-                    className="px-6 py-2.5 bg-blue-900 text-white rounded-xl text-xs font-bold shadow-xs hover:bg-blue-800"
-                  >
-                    Assess New Applicant
-                  </button>
+              {/* Fairness & Algorithmic Bias Audit Tab */}
+              {activePage === 'fairness' && (
+                <div className="animate-fade-in">
+                  <FairnessMetrics fairnessData={projectData.fairness} />
                 </div>
               )}
-            </div>
+
+              {/* Dataset Analytics & Insights Tab */}
+              {activePage === 'dataset' && (
+                <div className="animate-fade-in">
+                  <DatasetAnalytics dataset={projectData.dataset} />
+                </div>
+              )}
+
+              {/* Model Architecture & ML Pipeline Tab */}
+              {activePage === 'about' && (
+                <div className="animate-fade-in">
+                  <PipelineDiagram />
+                </div>
+              )}
+            </ModelDivisionLayout>
           )}
-
-          {/* 4. MODEL PERFORMANCE PAGE */}
-          {activePage === 'performance' && (
-            <div className="space-y-8">
-              <ModelComparisonTable
-                models={projectData.models.comparison_table}
-                bestModelName={projectData.models.best_model}
-              />
-
-              <RocPrCurves
-                rocCurves={projectData.models.roc_curves}
-                prCurves={projectData.models.pr_curves}
-              />
-
-              <ConfusionMatrixView
-                matrices={projectData.models.confusion_matrices}
-              />
-
-              <InterpretabilityScatter
-                data={projectData.models.interpretability_scatter}
-              />
-            </div>
-          )}
-
-          {/* 5. FAIRNESS & BIAS PAGE */}
-          {activePage === 'fairness' && (
-            <FairnessMetrics fairnessData={projectData.fairness} />
-          )}
-
-          {/* 6. DATASET INSIGHTS PAGE */}
-          {activePage === 'dataset' && (
-            <DatasetAnalytics dataset={projectData.dataset} />
-          )}
-
-          {/* 7. ABOUT THE MODEL PAGE */}
-          {activePage === 'about' && <PipelineDiagram />}
         </main>
       </div>
 

@@ -2,7 +2,6 @@ import React from 'react';
 import {
   LayoutDashboard,
   ClipboardCheck,
-  Sparkles,
   BarChart3,
   Scale,
   Database,
@@ -10,7 +9,9 @@ import {
   ShieldCheck,
   ChevronLeft,
   ChevronRight,
-  X
+  X,
+  Sparkles,
+  Layers,
 } from 'lucide-react';
 import { ActivePage } from '../../types';
 
@@ -33,47 +34,107 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onCloseMobile,
   hasAssessment,
 }) => {
-  const navItems = [
+  // Division 1: Individual Applicant Decisioning & XAI
+  const decisioningItems = [
     {
       id: 'dashboard' as ActivePage,
-      label: 'Dashboard',
+      label: 'Dashboard Overview',
       icon: LayoutDashboard,
+      badge: undefined,
     },
     {
       id: 'assessment' as ActivePage,
-      label: 'Credit Assessment',
+      label: 'Assessment & Explainability',
       icon: ClipboardCheck,
+      badge: 'Unified XAI',
+      activeOnExplainability: true,
     },
-    {
-      id: 'explainability' as ActivePage,
-      label: 'Explainability',
-      icon: Sparkles,
-    },
+  ];
+
+  // Division 2: Aggregate Model Intelligence & Institutional Auditing
+  const modelDivisionItems = [
     {
       id: 'performance' as ActivePage,
       label: 'Model Performance',
       icon: BarChart3,
+      badge: undefined,
     },
     {
       id: 'fairness' as ActivePage,
-      label: 'Fairness & Bias',
+      label: 'Fairness & Bias Audit',
       icon: Scale,
+      badge: undefined,
     },
     {
       id: 'dataset' as ActivePage,
       label: 'Dataset Insights',
       icon: Database,
+      badge: undefined,
     },
     {
       id: 'about' as ActivePage,
-      label: 'About the Model',
+      label: 'Model Architecture',
       icon: Info,
+      badge: undefined,
     },
   ];
 
   const handleNavClick = (page: ActivePage) => {
     onNavigate(page);
     onCloseMobile();
+  };
+
+  const renderNavButton = (item: {
+    id: ActivePage;
+    label: string;
+    icon: React.ElementType;
+    badge?: string;
+    activeOnExplainability?: boolean;
+  }) => {
+    const Icon = item.icon;
+    const isActive =
+      activePage === item.id ||
+      (item.activeOnExplainability && activePage === 'explainability');
+
+    return (
+      <button
+        key={item.id}
+        onClick={() => handleNavClick(item.id)}
+        className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-left transition-all relative group ${
+          isActive
+            ? 'bg-blue-900 text-white shadow-xs font-semibold'
+            : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium'
+        }`}
+        title={isCollapsed ? item.label : undefined}
+        aria-current={isActive ? 'page' : undefined}
+      >
+        <Icon
+          className={`w-5 h-5 shrink-0 transition-colors ${
+            isActive ? 'text-blue-200' : 'text-slate-500 group-hover:text-blue-900'
+          }`}
+          aria-hidden="true"
+        />
+
+        {!isCollapsed && (
+          <div className="flex-1 flex items-center justify-between min-w-0">
+            <span className="text-xs sm:text-sm font-semibold tracking-tight truncate">
+              {item.label}
+            </span>
+            {item.badge && (
+              <span
+                className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md shrink-0 ml-1.5 ${
+                  isActive
+                    ? 'bg-blue-800 text-blue-200'
+                    : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                }`}
+              >
+                {item.badge}
+              </span>
+            )}
+          </div>
+        )}
+      </button>
+    );
   };
 
   const sidebarContent = (
@@ -89,6 +150,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <span className="font-extrabold text-base tracking-tight text-slate-900 block leading-tight">
                 CrediTrust <span className="text-blue-900 font-bold">AI</span>
               </span>
+              <span className="text-[10px] font-semibold text-slate-400 block tracking-wider uppercase">
+                Underwriting & Governance
+              </span>
             </div>
           )}
         </div>
@@ -103,39 +167,45 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </button>
       </div>
 
-      {/* Navigation List */}
-      <nav className="flex-1 px-3 py-4 space-y-1.5 overflow-y-auto" aria-label="Main Navigation">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = activePage === item.id;
+      {/* Navigation List Organized by Divisions */}
+      <nav className="flex-1 px-3 py-4 space-y-4 overflow-y-auto" aria-label="Main Navigation">
+        {/* DIVISION 1: APPLICANT DECISIONING & XAI */}
+        <div>
+          {!isCollapsed && (
+            <div className="px-3 pb-1.5 flex items-center justify-between">
+              <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                Applicant Decisioning
+              </span>
+              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                Tab 1
+              </span>
+            </div>
+          )}
+          {isCollapsed && <div className="my-1.5 border-t border-slate-100" />}
 
-          return (
-            <button
-              key={item.id}
-              onClick={() => handleNavClick(item.id)}
-              className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-left transition-colors relative group ${
-                isActive
-                  ? 'bg-blue-900 text-white shadow-xs font-semibold'
-                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium'
-              }`}
-              title={isCollapsed ? item.label : undefined}
-              aria-current={isActive ? 'page' : undefined}
-            >
-              <Icon
-                className={`w-5 h-5 shrink-0 ${
-                  isActive ? 'text-blue-200' : 'text-slate-500 group-hover:text-blue-900'
-                }`}
-                aria-hidden="true"
-              />
+          <div className="space-y-1">
+            {decisioningItems.map(renderNavButton)}
+          </div>
+        </div>
 
-              {!isCollapsed && (
-                <span className="text-sm font-semibold tracking-tight truncate">
-                  {item.label}
-                </span>
-              )}
-            </button>
-          );
-        })}
+        {/* DIVISION 2: MODEL INTELLIGENCE & GOVERNANCE */}
+        <div className="pt-2 border-t border-slate-100">
+          {!isCollapsed && (
+            <div className="px-3 pb-1.5 flex items-center justify-between">
+              <span className="text-[10px] font-extrabold uppercase tracking-wider text-indigo-700">
+                Model Intelligence
+              </span>
+              <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 uppercase tracking-wider">
+                Division
+              </span>
+            </div>
+          )}
+          {isCollapsed && <div className="my-1.5 border-t border-slate-100" />}
+
+          <div className="space-y-1">
+            {modelDivisionItems.map(renderNavButton)}
+          </div>
+        </div>
       </nav>
 
       {/* Desktop Collapse Toggle */}
@@ -183,3 +253,5 @@ export const Sidebar: React.FC<SidebarProps> = ({
     </>
   );
 };
+
+export default Sidebar;

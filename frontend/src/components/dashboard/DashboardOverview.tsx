@@ -11,6 +11,7 @@ import {
   Users,
   BarChart3,
   PieChart as PieIcon,
+  Zap,
 } from 'lucide-react';
 import { KpiCard } from '../common/KpiCard';
 import {
@@ -69,16 +70,25 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           </h2>
 
           <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
-            AI-powered credit assessment with transparent and fair decision-making. Non-technical loan officers can generate auditable risk scores, inspect individual SHAP attributions, and formulate actionable counterfactuals.
+            AI-powered credit assessment with transparent, auditable decision-making. Loan officers can score applicants, review real-time SHAP attributions, and formulate actionable counterfactuals in a single unified workspace—while model governance teams audit comparative benchmarks, demographic parity, and dataset health in the Model Intelligence Division.
           </p>
 
-          <div className="pt-2">
+          <div className="pt-2 flex flex-wrap items-center gap-3">
             <button
               onClick={() => onNavigate('assessment')}
               className="px-6 py-3 bg-white hover:bg-slate-100 text-slate-900 font-bold rounded-xl text-xs sm:text-sm shadow-md transition-all flex items-center gap-2 group"
             >
-              <span>Assess New Applicant</span>
+              <Zap className="w-4 h-4 text-blue-600" />
+              <span>Assess Applicant & Explainability</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </button>
+
+            <button
+              onClick={() => onNavigate('performance')}
+              className="px-5 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl text-xs sm:text-sm border border-slate-700 transition-all flex items-center gap-2"
+            >
+              <BarChart3 className="w-4 h-4 text-indigo-400" />
+              <span>Explore Model Division</span>
             </button>
           </div>
         </div>
@@ -100,7 +110,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             value={`${dataset.total_applicants.toLocaleString()} Loans`}
             subtitle={`${dataset.training_samples} Train / ${dataset.testing_samples} Test (${dataset.features_count} Features)`}
             icon={Database}
-            badge={{ text: 'German Credit', variant: 'info' }}
+            badge={{ text: 'Model Division', variant: 'info' }}
             onClick={() => onNavigate('dataset')}
           />
 
@@ -110,24 +120,24 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             value={`${(bestModelMetric.roc_auc * 100).toFixed(1)}% AUC`}
             subtitle={`${models.best_model} (Acc: ${(bestModelMetric.accuracy * 100).toFixed(1)}%, F1: ${bestModelMetric.f1.toFixed(2)})`}
             icon={Trophy}
-            badge={{ text: 'Champion', variant: 'positive' }}
+            badge={{ text: 'Model Division', variant: 'positive' }}
             onClick={() => onNavigate('performance')}
           />
 
           {/* Explainability KPI */}
           <KpiCard
-            title="Explainability Engine"
-            value="SHAP + LIME"
-            subtitle="TreeExplainer + Actionable Counterfactuals"
+            title="Assessment & XAI"
+            value="Unified Tab"
+            subtitle="SHAP Waterfall + LIME + Recourse"
             icon={Sparkles}
-            badge={{ text: 'Active', variant: 'positive' }}
-            onClick={() => onNavigate('explainability')}
+            badge={{ text: 'Active Tab', variant: 'positive' }}
+            onClick={() => onNavigate('assessment')}
           />
 
           {/* Fairness KPI */}
           <KpiCard
             title="Fairness Audit"
-            value={`0.080 Diff`}
+            value="0.080 Diff"
             subtitle={`Equalized Odds: ${fairness.equalized_odds_difference.toFixed(3)} (Audit: Sex)`}
             icon={Scale}
             badge={{ text: fairness.demographic_parity_status, variant: 'positive' }}
@@ -243,50 +253,58 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         </div>
       </div>
 
-      {/* Quick Navigation Cards */}
+      {/* Division Navigation Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div
           onClick={() => onNavigate('assessment')}
-          className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-blue-400 hover:shadow-xs transition-all cursor-pointer space-y-2"
+          className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-blue-500 hover:shadow-xs transition-all cursor-pointer space-y-2 group"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-900">Step 1</span>
-            <ArrowRight className="w-4 h-4 text-slate-400" />
+            <span className="text-[11px] font-extrabold uppercase tracking-wider text-blue-900 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+              Workspace Tab 1
+            </span>
+            <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-blue-900 group-hover:translate-x-1 transition-all" />
           </div>
-          <h4 className="font-bold text-slate-900 text-sm">Underwriting Assessment</h4>
+          <h4 className="font-bold text-slate-900 text-sm">Credit Assessment & Explainability</h4>
           <p className="text-xs text-slate-500 leading-relaxed">
-            Input applicant financials (duration, amount, checking status) to generate calibrated probability.
+            Combined interactive underwriting and instant XAI diagnostics: input applicant details, evaluate risk, inspect SHAP waterfall and simulate counterfactual recourse.
           </p>
         </div>
 
         <div
-          onClick={() => onNavigate('explainability')}
-          className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-blue-400 hover:shadow-xs transition-all cursor-pointer space-y-2"
+          onClick={() => onNavigate('performance')}
+          className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-indigo-500 hover:shadow-xs transition-all cursor-pointer space-y-2 group"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-900">Step 2</span>
-            <ArrowRight className="w-4 h-4 text-slate-400" />
+            <span className="text-[11px] font-extrabold uppercase tracking-wider text-indigo-900 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">
+              Model Division
+            </span>
+            <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-indigo-900 group-hover:translate-x-1 transition-all" />
           </div>
-          <h4 className="font-bold text-slate-900 text-sm">Algorithmic Explainability</h4>
+          <h4 className="font-bold text-slate-900 text-sm">Model Performance & Benchmark</h4>
           <p className="text-xs text-slate-500 leading-relaxed">
-            Inspect top risk drivers and mitigating factors with SHAP, LIME, and actionable counterfactual recourse.
+            Compare ROC-AUC, PR curves, Confusion Matrix, and interpretability latency across 4 production and baseline candidate models.
           </p>
         </div>
 
         <div
           onClick={() => onNavigate('fairness')}
-          className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-blue-400 hover:shadow-xs transition-all cursor-pointer space-y-2"
+          className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-indigo-500 hover:shadow-xs transition-all cursor-pointer space-y-2 group"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-900">Step 3</span>
-            <ArrowRight className="w-4 h-4 text-slate-400" />
+            <span className="text-[11px] font-extrabold uppercase tracking-wider text-indigo-900 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">
+              Model Division
+            </span>
+            <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-indigo-900 group-hover:translate-x-1 transition-all" />
           </div>
-          <h4 className="font-bold text-slate-900 text-sm">Equity & Bias Audit</h4>
+          <h4 className="font-bold text-slate-900 text-sm">Fairness, Bias & Dataset Auditing</h4>
           <p className="text-xs text-slate-500 leading-relaxed">
-            Verify demographic parity and equalized odds compliance under Equal Credit Opportunity standards.
+            Verify demographic parity across gender, evaluate equalized odds, and inspect the 1,000-loan German Credit dataset cohort distributions.
           </p>
         </div>
       </div>
     </div>
   );
 };
+
+export default DashboardOverview;
