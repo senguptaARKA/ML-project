@@ -2,10 +2,6 @@ import React from 'react';
 import {
   LayoutDashboard,
   ClipboardCheck,
-  BarChart3,
-  Scale,
-  Database,
-  Info,
   ChevronLeft,
   ChevronRight,
   X,
@@ -52,25 +48,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       id: 'performance' as ActivePage,
       label: 'Model Performance',
-      icon: BarChart3,
       badge: undefined,
     },
     {
       id: 'fairness' as ActivePage,
       label: 'Fairness & Bias Audit',
-      icon: Scale,
       badge: undefined,
     },
     {
       id: 'dataset' as ActivePage,
       label: 'Dataset Insights',
-      icon: Database,
       badge: undefined,
     },
     {
       id: 'about' as ActivePage,
       label: 'Model Architecture',
-      icon: Info,
       badge: undefined,
     },
   ];
@@ -85,7 +77,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const renderNavButton = (item: {
     id: ActivePage;
     label: string;
-    icon: React.ElementType;
+    icon?: React.ElementType;
     badge?: string;
     activeOnExplainability?: boolean;
   }) => {
@@ -110,16 +102,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
         title={isCollapsed ? item.label : undefined}
         aria-current={isActive ? 'page' : undefined}
       >
-        <Icon
-          className={`w-4 h-4 shrink-0 transition-colors ${
-            isActive
-              ? 'text-[#DCE8DF]'
-              : isDashboard
-              ? 'text-[#ABB89C] group-hover:text-white'
-              : 'text-[#849087] group-hover:text-[#173F35]'
-          }`}
-          aria-hidden="true"
-        />
+        {Icon ? (
+          <Icon
+            className={`w-4 h-4 shrink-0 transition-colors ${
+              isActive
+                ? 'text-[#DCE8DF]'
+                : isDashboard
+                ? 'text-[#ABB89C] group-hover:text-white'
+                : 'text-[#849087] group-hover:text-[#173F35]'
+            }`}
+            aria-hidden="true"
+          />
+        ) : isCollapsed ? (
+          <span className="w-5 text-center text-xs font-bold uppercase tracking-tight text-[#DCE8DF]">
+            {item.label.slice(0, 1)}
+          </span>
+        ) : null}
 
         {!isCollapsed && (
           <div className="flex-1 flex items-center justify-between min-w-0">

@@ -8,14 +8,32 @@ import React, { useEffect, useRef, useState } from 'react';
  * with a dark emerald cinematic overlay, subtle floating luminous particles,
  * and an automatic high-fidelity canvas fallback (flowing silk ribbons) if video
  * is unavailable or user prefers reduced motion.
+ *
+ * OPTIMIZED HIGH-PERFORMANCE SCROLL-SCRUBBING ENGINE:
+ * 1. Native Hardware Seek Pipeline:
+ *    - Re-encoded MP4 with ultra-dense keyframes (GOP=4, 0 B-frames, -tune fastdecode).
+ *    - Uses requestVideoFrameCallback (rVFC) with 'seeked' fallback for frame-exact presentation.
+ *    - Non-blocking seek queue: when a seek is in flight (isSeeking = true), incoming scroll updates
+ *      do not abort the hardware decoder; instead, the newest scroll position supersedes pending work
+ *      and is applied immediately the instant the active frame finishes decoding.
+ * 2. Zero-Layout-Thrashing & Cached Dimensions:
+ *    - maxScroll and video.duration are cached and recalculated only on resize / content mutations.
+ *    - window.scrollY / document.documentElement.scrollTop is read passively without triggering reflows.
+ * 3. Zero React State in Scroll Loop:
+ *    - All rapidly mutating values are kept in stable closures/refs outside the React render cycle.
+ *    - Component is wrapped in React.memo to prevent parent re-renders from touching the video.
+ * 4. Dedicated GPU Compositing Layer:
+ *    - Video element has translateZ(0) and backface-visibility: hidden to prevent repaint storms
+ *      across overlapping glassmorphic cards and backdrop-filter surfaces.
  */
-export const DashboardAnimatedBackground: React.FC = () => {
+export const DashboardAnimatedBackgroundComponent: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [useFallbackCanvas, setUseFallbackCanvas] = useState<boolean>(false);
 
+  // ─── High-Performance Scroll-to-Video Synchronization ─────────────────────
   useEffect(() => {
-    // Check user preference for reduced motion
+    // Check user preference for reduced motion — use canvas fallback instead
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) {
       setUseFallbackCanvas(true);
@@ -23,41 +41,229 @@ export const DashboardAnimatedBackground: React.FC = () => {
     }
 
     const video = videoRef.current;
-    if (video) {
-      // Attempt video playback
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise.catch((err) => {
-          console.warn('Autoplay prevented or video failed, engaging canvas simulation fallback:', err);
-          setUseFallbackCanvas(true);
-        });
-      }
+    if (!video) return;
+
+    // Ensure the video is paused — controlled strictly via scroll-driven currentTime
+    video.pause();
+
+    // Browser feature detection for requestVideoFrameCallback
+    const hasRVFC =
+      typeof HTMLVideoElement !== 'undefined' &&
+      'requestVideoFrameCallback' in HTMLVideoElement.prototype;
+
+    // ─── Mutable Seek Pipeline State ──────────────────────────────────────────
+    let rafId: number | null = null;
+    let rvfcId: number | null = null;
+
+    // Cached layout and video metrics (avoids layout thrashing on scroll)
+    let cachedMaxScroll = 1;
+    let cachedDuration = 0;
+    let metadataReady = video.readyState >= 1; // HAVE_METADATA
+
+    // Seek queue and concurrency guard
+    let isSeeking = false;
+    let seekStartTime = 0;
+    let pendingTargetTime: number | null = null;
+    let lastSeekAppliedTime = -1;
+    let latestScrollProgress: number | null = null;
+
+    // ─── Cache viewport & document scroll geometry ────────────────────────────
+    const updateCachedDimensions = () => {
+      const scrollHeight =
+        document.documentElement.scrollHeight || document.body.scrollHeight || 0;
+      const clientHeight = document.documentElement.clientHeight || window.innerHeight || 1;
+      cachedMaxScroll = Math.max(scrollHeight - clientHeight, 1);
+    };
+
+    updateCachedDimensions();
+
+    // ResizeObserver catches dynamic content changes without querying layout on scroll
+    let resizeObserver: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== 'undefined') {
+      resizeObserver = new ResizeObserver(() => {
+        updateCachedDimensions();
+      });
+      resizeObserver.observe(document.documentElement);
     }
 
-    // Pause video when tab is hidden to save GPU/CPU cycles
-    const handleVisibility = () => {
-      if (!video) return;
-      if (document.hidden) {
-        video.pause();
-      } else {
-        video.play().catch(() => {});
+    // ─── Read Normalized Scroll Progress (0.0 to 1.0) ────────────────────────
+    const getScrollProgress = (): number => {
+      const scrollY =
+        window.scrollY !== undefined
+          ? window.scrollY
+          : document.documentElement.scrollTop || document.body.scrollTop || 0;
+      return Math.min(Math.max(scrollY / cachedMaxScroll, 0), 1);
+    };
+
+    // ─── Execute Video Seek with Concurrency Management ──────────────────────
+    const executeSeek = (targetTime: number) => {
+      if (!video || cachedDuration <= 0) return;
+
+      const clamped = Math.min(Math.max(targetTime, 0), cachedDuration);
+
+      // Deadband: skip seeks smaller than ~3ms (less than 1/10th of a 30fps frame)
+      if (Math.abs(clamped - lastSeekAppliedTime) < 0.003) {
+        return;
+      }
+
+      if (isSeeking) {
+        // Hardware decoder is actively decoding a previous seek.
+        // Queue this latest target time so it supersedes any stale intermediate position
+        // without thrashing the hardware decoder pipeline.
+        pendingTargetTime = clamped;
+        return;
+      }
+
+      // Initiate hardware seek
+      isSeeking = true;
+      seekStartTime = performance.now();
+      lastSeekAppliedTime = clamped;
+      pendingTargetTime = null;
+
+      try {
+        video.currentTime = clamped;
+      } catch {
+        isSeeking = false;
+        return;
+      }
+
+      // Coordinate frame presentation with rVFC if supported
+      if (hasRVFC && 'requestVideoFrameCallback' in video) {
+        if (rvfcId !== null && 'cancelVideoFrameCallback' in video) {
+          (video as any).cancelVideoFrameCallback(rvfcId);
+        }
+        rvfcId = (video as any).requestVideoFrameCallback(handleFramePresented);
       }
     };
-    document.addEventListener('visibilitychange', handleVisibility);
+
+    // ─── Frame Presented / Seek Completed Callback ───────────────────────────
+    const handleSeekCompleted = () => {
+      isSeeking = false;
+      rvfcId = null;
+
+      // If a newer scroll position arrived while the previous frame was decoding,
+      // apply it immediately to keep the video locked to the newest scroll position.
+      if (pendingTargetTime !== null) {
+        const nextTarget = pendingTargetTime;
+        pendingTargetTime = null;
+        executeSeek(nextTarget);
+      }
+    };
+
+    const handleSeekedEvent = () => {
+      handleSeekCompleted();
+    };
+
+    const handleFramePresented = (_now: DOMHighResTimeStamp, _metadata: any) => {
+      handleSeekCompleted();
+    };
+
+    // ─── Watchdog Guard for Edge-Case Decoder Stalls ──────────────────────────
+    const checkDecoderWatchdog = () => {
+      // If isSeeking has been held for > 90ms (e.g. dropped event), force unlock
+      if (isSeeking && performance.now() - seekStartTime > 90) {
+        handleSeekCompleted();
+      }
+    };
+
+    // ─── Single rAF Batch Callback ───────────────────────────────────────────
+    const applyAnimationFrame = () => {
+      rafId = null;
+      checkDecoderWatchdog();
+
+      if (latestScrollProgress === null) return;
+      if (!metadataReady || cachedDuration <= 0) return;
+
+      const progress = latestScrollProgress;
+      latestScrollProgress = null;
+      const targetTime = progress * cachedDuration;
+
+      executeSeek(targetTime);
+    };
+
+    // ─── Passive Scroll Event Handler ────────────────────────────────────────
+    const handleScroll = () => {
+      latestScrollProgress = getScrollProgress();
+      if (rafId === null) {
+        rafId = requestAnimationFrame(applyAnimationFrame);
+      }
+    };
+
+    // ─── Video Metadata Loaded Handler ───────────────────────────────────────
+    const handleLoadedMetadata = () => {
+      metadataReady = true;
+      cachedDuration = video.duration && isFinite(video.duration) ? video.duration : 0;
+      updateCachedDimensions();
+
+      // Initial alignment: scrub to the current scroll position immediately
+      const initialProgress = getScrollProgress();
+      if (cachedDuration > 0) {
+        executeSeek(initialProgress * cachedDuration);
+      }
+    };
+
+    // If metadata is already available on mount, initialize duration and seek
+    if (video.readyState >= 1 && video.duration && isFinite(video.duration)) {
+      handleLoadedMetadata();
+    }
+
+    // ─── Visibility Change Handler ───────────────────────────────────────────
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId);
+          rafId = null;
+        }
+      } else {
+        video.pause();
+        updateCachedDimensions();
+        // Re-synchronize frame when user returns to tab
+        if (metadataReady && cachedDuration > 0) {
+          executeSeek(getScrollProgress() * cachedDuration);
+        }
+      }
+    };
+
+    const handleWindowResize = () => {
+      updateCachedDimensions();
+    };
+
+    // ─── Event Listeners Registration ────────────────────────────────────────
+    video.addEventListener('loadedmetadata', handleLoadedMetadata);
+    video.addEventListener('seeked', handleSeekedEvent);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleWindowResize, { passive: true });
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
-      document.removeEventListener('visibilitychange', handleVisibility);
+      video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      video.removeEventListener('seeked', handleSeekedEvent);
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleWindowResize);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+      }
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+      if (rvfcId !== null && hasRVFC && 'cancelVideoFrameCallback' in video) {
+        (video as any).cancelVideoFrameCallback(rvfcId);
+        rvfcId = null;
+      }
     };
   }, []);
 
-  // Canvas particle / fallback wave simulation
+  // ─── Canvas Particle / Fallback Wave Simulation ───────────────────────────
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let animationFrameId: number;
+    let animationFrameId: number | null = null;
     let width = (canvas.width = canvas.parentElement?.clientWidth || window.innerWidth);
     let height = (canvas.height = canvas.parentElement?.clientHeight || window.innerHeight);
 
@@ -66,7 +272,7 @@ export const DashboardAnimatedBackground: React.FC = () => {
       width = canvas.width = canvas.parentElement.clientWidth;
       height = canvas.height = canvas.parentElement.clientHeight;
     };
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize, { passive: true });
 
     // Subtle floating luminous dust particles
     interface Particle {
@@ -79,7 +285,7 @@ export const DashboardAnimatedBackground: React.FC = () => {
       phase: number;
     }
 
-    const particleCount = 26;
+    const particleCount = 24;
     const particles: Particle[] = [];
     for (let i = 0; i < particleCount; i++) {
       particles.push({
@@ -94,26 +300,19 @@ export const DashboardAnimatedBackground: React.FC = () => {
     }
 
     let time = 0;
-    let isVisible = true;
-
-    const handleVisibilityChange = () => {
-      isVisible = !document.hidden;
-    };
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+    let isVisible = !document.hidden;
 
     const render = () => {
       if (!isVisible) {
-        animationFrameId = requestAnimationFrame(render);
+        animationFrameId = null;
         return;
       }
 
       time += 0.007;
-
       ctx.clearRect(0, 0, width, height);
 
-      // If video fallback mode is active, render procedural silk ribbon waves
+      // Procedural silk ribbon waves if video fails or reduced-motion is requested
       if (useFallbackCanvas) {
-        // Deep background gradient
         const baseGrad = ctx.createLinearGradient(0, 0, width, height);
         baseGrad.addColorStop(0, '#06140F');
         baseGrad.addColorStop(0.4, '#0A211A');
@@ -122,7 +321,6 @@ export const DashboardAnimatedBackground: React.FC = () => {
         ctx.fillStyle = baseGrad;
         ctx.fillRect(0, 0, width, height);
 
-        // Fluid waves
         const waveLayers = [
           {
             colorStart: 'rgba(56, 88, 47, 0.35)',
@@ -249,12 +447,23 @@ export const DashboardAnimatedBackground: React.FC = () => {
       animationFrameId = requestAnimationFrame(render);
     };
 
-    render();
+    const handleCanvasVisibility = () => {
+      isVisible = !document.hidden;
+      if (isVisible && animationFrameId === null) {
+        animationFrameId = requestAnimationFrame(render);
+      }
+    };
+    document.addEventListener('visibilitychange', handleCanvasVisibility);
+
+    animationFrameId = requestAnimationFrame(render);
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      cancelAnimationFrame(animationFrameId);
+      document.removeEventListener('visibilitychange', handleCanvasVisibility);
+      if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+      }
     };
   }, [useFallbackCanvas]);
 
@@ -262,33 +471,39 @@ export const DashboardAnimatedBackground: React.FC = () => {
     <div
       className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none select-none z-0"
       aria-hidden="true"
+      style={{ transform: 'translateZ(0)' }}
     >
-      {/* 1. Underlying Cinematic MP4 Video Layer */}
+      {/* 1. Underlying Cinematic MP4 Video Layer — playback scrubbed by scroll position */}
       {!useFallbackCanvas && (
         <video
           ref={videoRef}
           src="/assets/video/dashboard-bg.mp4"
-          autoPlay
-          loop
           muted
           playsInline
+          preload="auto"
           onError={() => setUseFallbackCanvas(true)}
-          className="absolute inset-0 w-full h-full object-cover opacity-80 transition-opacity duration-1000 scale-[1.02]"
+          className="absolute inset-0 w-full h-full object-cover opacity-80 scale-[1.02]"
+          style={{
+            transform: 'translateZ(0)',
+            backfaceVisibility: 'hidden',
+          }}
         />
       )}
 
       {/* 2. Institutional Color Grading & Tone Matching Layer */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#06140F]/80 via-[#0A211A]/70 to-[#06140F]/90 mix-blend-multiply" />
-      <div className="absolute inset-0 bg-radial from-transparent via-[#06140F]/40 to-[#06140F]/90" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#06140F]/80 via-[#0A211A]/70 to-[#06140F]/90 mix-blend-multiply pointer-events-none" />
+      <div className="absolute inset-0 bg-radial from-transparent via-[#06140F]/40 to-[#06140F]/90 pointer-events-none" />
 
       {/* 3. Caustic Ambient Depth & Particle Canvas Layer */}
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 w-full h-full mix-blend-screen opacity-90"
+        className="absolute inset-0 w-full h-full mix-blend-screen opacity-90 pointer-events-none"
       />
 
       {/* 4. Fine Vignette around edges to anchor glassmorphism */}
-      <div className="absolute inset-0 shadow-[inset_0_0_120px_rgba(6,20,15,0.85)]" />
+      <div className="absolute inset-0 shadow-[inset_0_0_120px_rgba(6,20,15,0.85)] pointer-events-none" />
     </div>
   );
 };
+
+export const DashboardAnimatedBackground = React.memo(DashboardAnimatedBackgroundComponent);

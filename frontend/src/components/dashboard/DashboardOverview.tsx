@@ -1,17 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BackendData, ActivePage } from '../../types';
 import {
-  Database,
   Trophy,
-  Sparkles,
-  Scale,
   ArrowRight,
-  ShieldCheck,
   Zap,
   BarChart3,
-  Brain,
-  Activity,
-  Shield,
   ChevronUp,
   CheckCircle2,
 } from 'lucide-react';
@@ -109,22 +102,33 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
   // Scroll position tracking for progress bar and back-to-top button
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const progressBarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const totalScroll = document.documentElement.scrollTop;
+    let ticking = false;
+
+    const updateScrollUI = () => {
+      ticking = false;
+      const totalScroll = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
       const windowHeight =
-        document.documentElement.scrollHeight -
+        (document.documentElement.scrollHeight || document.body.scrollHeight || 0) -
         document.documentElement.clientHeight;
       const scrollPercent =
         windowHeight > 0 ? (totalScroll / windowHeight) * 100 : 0;
-      setScrollProgress(scrollPercent);
 
-      if (totalScroll > 280) {
-        setShowBackToTop(true);
-      } else {
-        setShowBackToTop(false);
+      // Direct DOM update avoids re-rendering the 800+ lines of DashboardOverview on every scroll
+      if (progressBarRef.current) {
+        progressBarRef.current.style.width = `${scrollPercent}%`;
+      }
+
+      const shouldShow = totalScroll > 280;
+      setShowBackToTop((prev) => (prev !== shouldShow ? shouldShow : prev));
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(updateScrollUI);
       }
     };
 
@@ -153,8 +157,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         {/* Scroll Progress Bar at the top of content */}
         <div className="fixed top-16 left-0 right-0 h-[2px] bg-transparent z-40 pointer-events-none">
           <div
-            className="h-full bg-gradient-to-r from-[#287653] via-[#6A9443] to-[#DCE8DF] transition-all duration-150 ease-out shadow-[0_0_8px_rgba(106,148,67,0.7)]"
-            style={{ width: `${scrollProgress}%` }}
+            ref={progressBarRef}
+            className="h-full bg-gradient-to-r from-[#287653] via-[#6A9443] to-[#DCE8DF] transition-[width] duration-75 ease-out shadow-[0_0_8px_rgba(106,148,67,0.7)]"
+            style={{ width: '0%' }}
           />
         </div>
 
@@ -167,10 +172,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         >
           {/* Eyebrow Label inside a refined dark glass capsule */}
           <div
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[11px] font-semibold text-[#DCE8DF] uppercase tracking-wider shadow-sm animate-slide-up-fade"
+            className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[11px] font-semibold text-[#DCE8DF] uppercase tracking-wider shadow-sm animate-slide-up-fade"
             style={{ animationDelay: '60ms' }}
           >
-            <ShieldCheck className="w-3.5 h-3.5 text-[#6A9443]" />
             <span>Institutional Risk Surveillance & Model Auditing</span>
           </div>
 
@@ -224,8 +228,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             {/* Left Column: Narrative Copy and Action Buttons (approx 60%) */}
             <div className="lg:col-span-7 space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-white/10 backdrop-blur-xs text-[#DCE8DF] border border-white/15 text-xs font-medium">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#6A9443]" />
+              <div className="inline-flex items-center px-3 py-1 rounded-md bg-white/10 backdrop-blur-xs text-[#DCE8DF] border border-white/15 text-xs font-medium">
                 <span>Production Banking AI System</span>
               </div>
 
@@ -376,19 +379,12 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               className="dashboard-glass-card rounded-2xl p-5 hover:-translate-y-1 hover:border-[#AECFBE]/40 hover:shadow-[0_16px_36px_rgba(0,0,0,0.4)] transition-all duration-200 cursor-pointer group select-none flex flex-col justify-between"
             >
               <div>
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-wider text-[#ABB89C]">
-                      Dataset Cohort
-                    </p>
-                    <p className="text-2xl sm:text-[26px] font-bold text-white mt-1.5 tracking-tight">
-                      <AnimatedNumber value={dataset.total_applicants} suffix=" Loans" />
-                    </p>
-                  </div>
-                  <div className="w-10 h-10 rounded-xl bg-white/10 text-[#DCE8DF] border border-white/15 flex items-center justify-center shrink-0 group-hover:scale-105 group-hover:bg-[#173F35]/60 transition-transform shadow-xs">
-                    <Database className="w-4.5 h-4.5" aria-hidden="true" />
-                  </div>
-                </div>
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-[#ABB89C]">
+                  Dataset Cohort
+                </p>
+                <p className="text-2xl sm:text-[26px] font-bold text-white mt-1.5 tracking-tight">
+                  <AnimatedNumber value={dataset.total_applicants} suffix=" Loans" />
+                </p>
               </div>
 
               <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between gap-2">
@@ -408,19 +404,12 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             >
               <div className="absolute top-0 right-0 w-28 h-28 bg-gradient-to-bl from-[#A88955]/15 to-transparent pointer-events-none" />
               <div>
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-wider text-[#ABB89C]">
-                      Champion Model
-                    </p>
-                    <p className="text-2xl sm:text-[26px] font-bold text-white mt-1.5 tracking-tight">
-                      <AnimatedNumber value={bestModelMetric.roc_auc * 100} decimals={1} suffix="% AUC" />
-                    </p>
-                  </div>
-                  <div className="w-10 h-10 rounded-xl bg-[#A88955]/15 text-[#D4AF37] border border-[#A88955]/30 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform shadow-xs">
-                    <Trophy className="w-4.5 h-4.5" aria-hidden="true" />
-                  </div>
-                </div>
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-[#ABB89C]">
+                  Champion Model
+                </p>
+                <p className="text-2xl sm:text-[26px] font-bold text-white mt-1.5 tracking-tight">
+                  <AnimatedNumber value={bestModelMetric.roc_auc * 100} decimals={1} suffix="% AUC" />
+                </p>
               </div>
 
               <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between gap-2 relative z-10">
@@ -439,19 +428,12 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               className="dashboard-glass-card rounded-2xl p-5 hover:-translate-y-1 hover:border-[#AECFBE]/40 hover:shadow-[0_16px_36px_rgba(0,0,0,0.4)] transition-all duration-200 cursor-pointer group select-none flex flex-col justify-between"
             >
               <div>
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-wider text-[#ABB89C]">
-                      Assessment & XAI
-                    </p>
-                    <p className="text-2xl sm:text-[26px] font-bold text-white mt-1.5 tracking-tight">
-                      Unified Tab
-                    </p>
-                  </div>
-                  <div className="w-10 h-10 rounded-xl bg-white/10 text-[#6A9443] border border-white/15 flex items-center justify-center shrink-0 group-hover:scale-105 group-hover:bg-[#173F35]/60 transition-transform shadow-xs">
-                    <Sparkles className="w-4.5 h-4.5" aria-hidden="true" />
-                  </div>
-                </div>
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-[#ABB89C]">
+                  Assessment & XAI
+                </p>
+                <p className="text-2xl sm:text-[26px] font-bold text-white mt-1.5 tracking-tight">
+                  Unified Tab
+                </p>
               </div>
 
               <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between gap-2">
@@ -470,19 +452,12 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               className="dashboard-glass-card rounded-2xl p-5 hover:-translate-y-1 hover:border-[#AECFBE]/40 hover:shadow-[0_16px_36px_rgba(0,0,0,0.4)] transition-all duration-200 cursor-pointer group select-none flex flex-col justify-between"
             >
               <div>
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-wider text-[#ABB89C]">
-                      Fairness Audit
-                    </p>
-                    <p className="text-2xl sm:text-[26px] font-bold text-white mt-1.5 tracking-tight">
-                      <AnimatedNumber value={0.08} decimals={3} suffix=" Diff" />
-                    </p>
-                  </div>
-                  <div className="w-10 h-10 rounded-xl bg-white/10 text-[#DCE8DF] border border-white/15 flex items-center justify-center shrink-0 group-hover:scale-105 group-hover:bg-[#173F35]/60 transition-transform shadow-xs">
-                    <Scale className="w-4.5 h-4.5" aria-hidden="true" />
-                  </div>
-                </div>
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-[#ABB89C]">
+                  Fairness Audit
+                </p>
+                <p className="text-2xl sm:text-[26px] font-bold text-white mt-1.5 tracking-tight">
+                  <AnimatedNumber value={0.08} decimals={3} suffix=" Diff" />
+                </p>
               </div>
 
               <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between gap-2">
@@ -512,18 +487,13 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
           {/* Engine Header */}
           <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-white/10 gap-3">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center shadow-xs">
-                <Brain className="w-4.5 h-4.5 text-[#6A9443]" />
-              </div>
-              <div>
-                <h3 className="font-bold text-white text-sm sm:text-base tracking-tight">
-                  AI Credit Decisioning Engine
-                </h3>
-                <p className="text-[11px] text-[#ABB89C]">
-                  Multi-layer feature propagation, calibrated scoring & credit recourse pipeline
-                </p>
-              </div>
+            <div>
+              <h3 className="font-bold text-white text-sm sm:text-base tracking-tight">
+                AI Credit Decisioning Engine
+              </h3>
+              <p className="text-[11px] text-[#ABB89C]">
+                Multi-layer feature propagation, calibrated scoring & credit recourse pipeline
+              </p>
             </div>
 
             <div className="flex items-center gap-2">
@@ -600,7 +570,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     key={i}
                     className="w-12 h-10 rounded-xl border border-[#315F50] bg-[#0A211A] flex items-center justify-center shadow-sm relative group cursor-default"
                   >
-                    <Activity className="w-4 h-4 text-[#6A9443]" />
+                    <span className="text-xs font-mono font-bold text-[#6A9443]">L{i + 1}</span>
                     <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-[#6A9443] shadow-[0_0_6px_rgba(106,148,67,0.8)] animate-pulse-subtle" />
                   </div>
                 ))}
@@ -638,14 +608,12 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
                 {/* Low Risk Approved */}
                 <div className="w-22 h-12 rounded-xl border border-[#287653]/50 bg-[#102F29]/80 backdrop-blur-xs flex flex-col items-center justify-center shadow-xs">
-                  <Shield className="w-3.5 h-3.5 text-[#6A9443]" />
                   <span className="text-[9px] font-bold text-[#6A9443] mt-0.5">LOW RISK</span>
                   <span className="text-[8px] text-[#DCE8DF]/80">84% Approval</span>
                 </div>
 
                 {/* High Risk Scrutiny */}
                 <div className="w-22 h-12 rounded-xl border border-[#B64D49]/50 bg-[#201010]/80 backdrop-blur-xs flex flex-col items-center justify-center shadow-xs">
-                  <Shield className="w-3.5 h-3.5 text-[#E07A7A]" />
                   <span className="text-[9px] font-bold text-[#E07A7A] mt-0.5">HIGH RISK</span>
                   <span className="text-[8px] text-[#DCE8DF]/80">Audit Recourse</span>
                 </div>
