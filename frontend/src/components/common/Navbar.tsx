@@ -28,7 +28,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     <header
       className={`sticky top-0 z-30 h-16 px-4 sm:px-6 flex items-center justify-between transition-all duration-300 ${
         isDashboard
-          ? 'bg-[#06140F]/80 backdrop-blur-xl border-b border-[#AECFBE]/20 shadow-[0_4px_24px_rgba(0,0,0,0.35)]'
+          ? 'bg-[#101514]/80 backdrop-blur-xl border-b border-white/14 shadow-[0_4px_24px_rgba(0,0,0,0.25)]'
           : 'bg-[#102F29] border-b border-[#315F50]/60 shadow-[0_2px_8px_rgba(16,47,41,0.18)]'
       }`}
     >
@@ -38,7 +38,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           onClick={onOpenMobileSidebar}
           className={`lg:hidden p-2 rounded-lg shadow-xs transition-all cursor-pointer ${
             isDashboard
-              ? 'text-white bg-white/10 hover:bg-white/15 border border-white/20 backdrop-blur-sm'
+              ? 'text-white glass-subtle'
               : 'text-[#102F29] hover:text-[#173F35] bg-white hover:bg-[#F5F5F0] border border-[#E0E4DD]'
           }`}
           aria-label="Open navigation menu"
@@ -53,7 +53,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div
           className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-xs transition-colors ${
             isDashboard
-              ? 'bg-white/10 text-white border border-white/15 backdrop-blur-sm'
+              ? 'glass-subtle text-white'
               : 'bg-white text-[#102F29] border border-[#E0E4DD]'
           }`}
           title={
@@ -85,7 +85,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={onNavigateToAssessment}
             className={`hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold shadow-xs transition-all cursor-pointer group ${
               isDashboard
-                ? 'bg-[#173F35]/85 hover:bg-[#173F35] text-white border border-[#AECFBE]/30 backdrop-blur-sm'
+                ? 'bg-[#173F35]/85 hover:bg-[#173F35] text-white border border-[#287653]/40 shadow-xs'
                 : 'bg-white hover:bg-[#F5F5F0] text-[#102F29] border border-[#E0E4DD]'
             }`}
           >
@@ -103,7 +103,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           onClick={onOpenHelp}
           className={`p-2 rounded-lg shadow-xs transition-all cursor-pointer group ${
             isDashboard
-              ? 'text-[#DCE8DF] hover:text-white bg-white/10 hover:bg-white/15 border border-white/15 backdrop-blur-sm'
+              ? 'text-[#CBD5D0] hover:text-white glass-subtle'
               : 'text-[#102F29] hover:text-[#173F35] bg-white hover:bg-[#F5F5F0] border border-[#E0E4DD]'
           }`}
           aria-label="Help and documentation guide"
@@ -126,7 +126,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div
             className={`w-8 h-8 rounded-lg flex items-center justify-center shadow-xs transition-colors ${
               isDashboard
-                ? 'bg-white/10 border border-white/15 text-[#DCE8DF] backdrop-blur-sm'
+                ? 'glass-subtle text-[#CBD5D0]'
                 : 'bg-white border border-[#E0E4DD] text-[#102F29]'
             }`}
           >
@@ -136,7 +136,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="text-xs font-semibold text-white block leading-tight">
               Officer Subra
             </span>
-            <span className="text-[10px] text-[#DCE8DF] block leading-tight mt-0.5">
+            <span className="text-[10px] text-[#CBD5D0] block leading-tight mt-0.5">
               Credit Risk Desk
             </span>
           </div>

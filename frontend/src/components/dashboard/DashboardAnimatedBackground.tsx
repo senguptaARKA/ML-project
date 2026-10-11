@@ -314,36 +314,36 @@ export const DashboardAnimatedBackgroundComponent: React.FC = () => {
       // Procedural silk ribbon waves if video fails or reduced-motion is requested
       if (useFallbackCanvas) {
         const baseGrad = ctx.createLinearGradient(0, 0, width, height);
-        baseGrad.addColorStop(0, '#06140F');
-        baseGrad.addColorStop(0.4, '#0A211A');
-        baseGrad.addColorStop(0.75, '#102F29');
-        baseGrad.addColorStop(1, '#06140F');
+        baseGrad.addColorStop(0, '#0A0E0D');
+        baseGrad.addColorStop(0.4, '#101514');
+        baseGrad.addColorStop(0.75, '#121816');
+        baseGrad.addColorStop(1, '#0A0E0D');
         ctx.fillStyle = baseGrad;
         ctx.fillRect(0, 0, width, height);
 
         const waveLayers = [
           {
-            colorStart: 'rgba(56, 88, 47, 0.35)',
-            colorEnd: 'rgba(6, 20, 15, 0.05)',
-            highlight: 'rgba(171, 184, 156, 0.4)',
+            colorStart: 'rgba(35, 45, 42, 0.35)',
+            colorEnd: 'rgba(10, 14, 13, 0.05)',
+            highlight: 'rgba(215, 224, 219, 0.35)',
             speed: 0.9,
             amplitude: 65,
             yOffset: 0.3,
             phaseOffset: 0,
           },
           {
-            colorStart: 'rgba(106, 148, 67, 0.28)',
-            colorEnd: 'rgba(16, 47, 41, 0.05)',
-            highlight: 'rgba(220, 232, 223, 0.45)',
+            colorStart: 'rgba(45, 58, 54, 0.28)',
+            colorEnd: 'rgba(12, 17, 16, 0.05)',
+            highlight: 'rgba(220, 232, 223, 0.40)',
             speed: 1.2,
             amplitude: 80,
             yOffset: 0.5,
             phaseOffset: Math.PI * 0.45,
           },
           {
-            colorStart: 'rgba(146, 179, 92, 0.22)',
-            colorEnd: 'rgba(6, 20, 15, 0.05)',
-            highlight: 'rgba(168, 137, 85, 0.4)',
+            colorStart: 'rgba(38, 50, 46, 0.22)',
+            colorEnd: 'rgba(10, 14, 13, 0.05)',
+            highlight: 'rgba(168, 137, 85, 0.35)',
             speed: 0.85,
             amplitude: 90,
             yOffset: 0.7,
@@ -418,8 +418,8 @@ export const DashboardAnimatedBackgroundComponent: React.FC = () => {
       const glow1X = width * (0.35 + 0.15 * Math.sin(time * 0.6));
       const glow1Y = height * (0.3 + 0.12 * Math.cos(time * 0.4));
       const radial1 = ctx.createRadialGradient(glow1X, glow1Y, 0, glow1X, glow1Y, width * 0.4);
-      radial1.addColorStop(0, 'rgba(49, 95, 80, 0.18)');
-      radial1.addColorStop(1, 'rgba(6, 20, 15, 0)');
+      radial1.addColorStop(0, 'rgba(35, 48, 44, 0.12)');
+      radial1.addColorStop(1, 'rgba(10, 14, 13, 0)');
       ctx.fillStyle = radial1;
       ctx.fillRect(0, 0, width, height);
 
@@ -482,7 +482,7 @@ export const DashboardAnimatedBackgroundComponent: React.FC = () => {
           playsInline
           preload="auto"
           onError={() => setUseFallbackCanvas(true)}
-          className="absolute inset-0 w-full h-full object-cover opacity-80 scale-[1.02]"
+          className="absolute inset-0 w-full h-full object-cover opacity-85 scale-[1.02]"
           style={{
             transform: 'translateZ(0)',
             backfaceVisibility: 'hidden',
@@ -490,18 +490,17 @@ export const DashboardAnimatedBackgroundComponent: React.FC = () => {
         />
       )}
 
-      {/* 2. Institutional Color Grading & Tone Matching Layer */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#06140F]/80 via-[#0A211A]/70 to-[#06140F]/90 mix-blend-multiply pointer-events-none" />
-      <div className="absolute inset-0 bg-radial from-transparent via-[#06140F]/40 to-[#06140F]/90 pointer-events-none" />
+      {/* 2. Institutional Color Grading & Tone Matching Layer (Neutral Graphite / Charcoal) */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0B100F]/60 via-[#0E1413]/40 to-[#0B100F]/70 pointer-events-none" />
 
       {/* 3. Caustic Ambient Depth & Particle Canvas Layer */}
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 w-full h-full mix-blend-screen opacity-90 pointer-events-none"
+        className="absolute inset-0 w-full h-full mix-blend-screen opacity-75 pointer-events-none"
       />
 
-      {/* 4. Fine Vignette around edges to anchor glassmorphism */}
-      <div className="absolute inset-0 shadow-[inset_0_0_120px_rgba(6,20,15,0.85)] pointer-events-none" />
+      {/* 4. Fine Neutral Vignette around edges to anchor glassmorphism */}
+      <div className="absolute inset-0 shadow-[inset_0_0_100px_rgba(8,12,11,0.70)] pointer-events-none" />
     </div>
   );
 };

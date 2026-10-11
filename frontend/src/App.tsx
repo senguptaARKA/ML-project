@@ -125,9 +125,8 @@ export const App: React.FC = () => {
 
   return (
     <div
-      className={`min-h-screen ${
-        activePage === 'dashboard' ? 'bg-[#06140F] text-[#F1F5F0]' : 'bg-[#F5F5F0] text-[#202C28]'
-      } flex flex-col font-sans transition-colors duration-300 relative`}
+      className={`min-h-screen ${activePage === 'dashboard' ? 'bg-[#0B0F0E] text-[#F1F5F0]' : 'bg-[#F5F5F0] text-[#202C28]'
+        } flex flex-col font-sans transition-colors duration-300 relative`}
     >
       {/* Top Application Header */}
       <Navbar
