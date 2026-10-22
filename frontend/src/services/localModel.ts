@@ -194,7 +194,7 @@ export function predictLocally(applicant: ApplicantInput): PredictionResult {
     risk_label: isBad ? 'Higher Credit Risk' : 'Good Credit Risk',
     probability_good: probGood,
     probability_bad: probBad,
-    model: 'Tuned Random Forest',
+    model: 'Explainable Boosting Machine (EBM)',
     assessment_status: isBad ? 'Elevated risk profile detected' : 'Lower predicted credit risk',
     shap_base_value: 0.30,
     shap_features: shapList,
@@ -204,8 +204,8 @@ export function predictLocally(applicant: ApplicantInput): PredictionResult {
     counterfactual,
     applicant_input: applicant,
     fairness_notice: {
-      demographic_parity_diff: 0.08,
-      equalized_odds_diff: 0.09,
+      demographic_parity_diff: 0.075,
+      equalized_odds_diff: 0.082,
       sensitive_attribute: applicant.Sex
     },
     source: 'client_engine'
